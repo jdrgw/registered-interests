@@ -139,3 +139,66 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+# Define the log directory relative to BASE_DIR
+log_directory = os.path.join(BASE_DIR, 'logs')
+
+# Create the log directory if it does not exist
+if not os.path.exists(log_directory):
+    os.makedirs(log_directory)
+
+
+LOGGERS = {
+    "django": {
+        "handlers": ["console", "simple_print", "detailed_print"],
+        "level": "DEBUG",
+        "propagate": False,  # Fixed spelling from "propogate" to "propagate"
+    },
+}
+
+HANDLERS = {
+    "console": {
+        "level": "INFO",
+        "class": "logging.StreamHandler",
+        "formatter": "simple",
+    },
+    "simple_print": {
+        "class": "logging.handlers.RotatingFileHandler",
+        "filename": f"{BASE_DIR}/logs/simple_parliament_data.log",
+        "mode": "a",
+        "encoding": "utf-8",
+        "formatter": "simple",
+        "backupCount": 10,
+        "maxBytes": 1024 * 1024 * 10,  # 10 MB
+    },
+    "detailed_print": {
+        "class": "logging.handlers.RotatingFileHandler",
+        "filename": f"{BASE_DIR}/logs/detailed_parliament_data.log",
+        "mode": "a",
+        "encoding": "utf-8",
+        "formatter": "detailed",
+        "backupCount": 10,
+        "maxBytes": 1024 * 1024 * 10,  # 10 MB
+    },
+}
+
+FORMATTERS = {
+    "simple": {
+        "format": "{levelname} {asctime} {module} {filename} {lineno} {funcName} {message}",
+        "style": "{",
+    },
+    "detailed": {
+        "format": "{levelname} {asctime} {threadName} {thread} {module} {filename} {lineno} {name} {funcName} {process} {message}",
+        "style": "{",
+    },
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "loggers": LOGGERS,
+    "handlers": HANDLERS,
+    "formatters": FORMATTERS,
+}
