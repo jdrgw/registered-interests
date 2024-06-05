@@ -20,8 +20,8 @@ class TestUnpackSaveMembersDataFunction(TestCase):
                             "thumbnailUrl": "http://example.com",
                             "latestHouseMembership": {
                                 "membershipFrom": "London",
-                                "membershipStartDate": "2024-01-01",
-                                "membershipEndDate": "2024-12-31",
+                                "membershipStartDate": "2024-01-01T00:00:00",
+                                "membershipEndDate": "2024-12-31T00:00:00",
                                 "membershipEndReason": "Retired",
                                 "membershipEndReasonNotes": "Retired due to age",
                                 "house": 1
@@ -47,12 +47,11 @@ class TestUnpackSaveMembersDataFunction(TestCase):
         self.assertEqual(member.gender, 'Male')
         self.assertEqual(member.thumbnail_url, 'http://example.com')
         self.assertEqual(member.constituency, 'London')
-        self.assertEqual(member.membership_start.strftime('%Y-%m-%d'), '2024-01-01')
-        self.assertEqual(member.membership_end.strftime('%Y-%m-%d'), '2024-12-31')
+        self.assertEqual(member.membership_start.strftime('%Y-%m-%dT%H:%M:%S'), '2024-01-01T00:00:00')
+        self.assertEqual(member.membership_end.strftime('%Y-%m-%dT%H:%M:%S'), '2024-12-31T00:00:00')
         self.assertEqual(member.membership_end_reason, 'Retired')
         self.assertEqual(member.membership_end_notes, 'Retired due to age')
         self.assertEqual(member.house, 'House of Commons')
-        print(run)
 
     @mock.patch('members_interest_app.utils.os.path.dirname', return_value='/mocked/directory')
     @mock.patch('members_interest_app.utils.os.path.abspath', side_effect=lambda path: path.replace('/mocked/absolute/test/path', '/Users/jamie/repos/parliament_repo/parliament_data/members_interest_app/'))
@@ -93,8 +92,8 @@ class TestUnpackSaveMembersDataFunction(TestCase):
                                     "thumbnailUrl": "http://example.com",
                                     "latestHouseMembership": {
                                         "membershipFrom": "London",
-                                        "membershipStartDate": "2024-01-01",
-                                        "membershipEndDate": "2024-12-31",
+                                        "membershipStartDate": "2024-01-01T00:00:00",
+                                        "membershipEndDate": "2024-12-31T00:00:00",
                                         "membershipEndReason": "Retired",
                                         "membershipEndReasonNotes": "Retired due to age",
                                         "house": 1
