@@ -36,7 +36,7 @@ class TestUnpackSaveMembersDataFunction(TestCase):
         current_dir = os.path.abspath(os.path.dirname(__file__))
         members_json_file = os.path.abspath(os.path.join(current_dir, '../../call_members_api/members_of_parliament.json'))
         
-        unpack_save_members_data()
+        run = unpack_save_members_data()
 
         # Check that the open function was called with the correct arguments
         mock_open.assert_called_once_with(members_json_file, 'r')
@@ -52,7 +52,7 @@ class TestUnpackSaveMembersDataFunction(TestCase):
         self.assertEqual(member.membership_end_reason, 'Retired')
         self.assertEqual(member.membership_end_notes, 'Retired due to age')
         self.assertEqual(member.house, 'House of Commons')
-
+        print(run)
 
     @mock.patch('members_interest_app.utils.os.path.dirname', return_value='/mocked/directory')
     @mock.patch('members_interest_app.utils.os.path.abspath', side_effect=lambda path: path.replace('/mocked/absolute/test/path', '/Users/jamie/repos/parliament_repo/parliament_data/members_interest_app/'))

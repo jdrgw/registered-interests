@@ -55,9 +55,11 @@ def unpack_save_members_data():
             seat_data = mps.get("latestHouseMembership")
             try:
                 # TODO: explore bulk update or save for effficient
+                api_id=mps.get("id")
                 member, created = MemberOfParliament.objects.update_or_create(
-                    api_id=mps.get("id"),
+                    api_id=api_id,
                     defaults={
+                        "api_id": api_id,
                         "name": mps.get("nameDisplayAs"),
                         "gender": mps.get("gender", "Undisclosed"),
                         "thumbnail_url": mps.get("thumbnailUrl"),
@@ -74,7 +76,11 @@ def unpack_save_members_data():
                 else:
                     total_updated += 1
             except Exception as e:
-                logger.error(f"Error processing member data: {e}")
+                logger.error(f"Error processing member data: {e}. Member api_id is: {api_id}")
                 total_errors += 1
     # log the counts of errors and , number members created, number members updated
-    logger.info(f'Total members added: {total_added}, Total members updated: {total_updated}, Total errors: {total_errors}')
+    outcome = f'Total members added: {total_added}, Total members updated: {total_updated}, Total errors: {total_errors}'
+    logger.info(outcome)
+    return(outcome)
+
+    
