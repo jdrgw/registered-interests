@@ -5,10 +5,13 @@ import json
 import logging
 from datetime import datetime
 from django.utils import timezone
-from .models import MemberOfParliament  
+from .models import MemberOfParliament 
+from django.db import transaction
+
 
 logger = logging.getLogger(__name__)
 
+@transaction.atomic
 def unpack_save_members_data():
 
     """
