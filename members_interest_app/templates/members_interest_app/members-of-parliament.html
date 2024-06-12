@@ -2,12 +2,34 @@
 {% block content%}
 <div class="container">
     <main class="container">
-        <div class="mt-4">
-            <div class="bg-light p-5 rounded">
-                <h1>Members of Parliament</h1>
-                <p class="lead">This example is a quick exercise to illustrate how the top-aligned navbar works. As you scroll, this navbar remains in its original position and moves with the rest of the page.</p>
-                <a class="btn btn-lg btn-primary" href="/docs/5.0/components/navbar/" role="button">View navbar docs &raquo;</a>
-            </div>    
+        <div>
+            {% for member in members %}
+                <div class="mt-4">
+                    <div class="bg-light p-5 rounded">
+                        <h1>{{ member.name }}</h1>
+                        <p> {{ member.house }}</p>
+                        <p> {{ member.constituency }}</p>
+                    </div>    
+                </div>
+            {% endfor %}
+        </div>
+        <!-- Pagination controls -->
+        <div class="pagination mt-4">
+            <span class="step-links">
+                {% if members.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ members.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ members.number }} of {{ members.paginator.num_pages }}
+                </span>
+
+                {% if members.has_next %}
+                    <a href="?page={{ members.next_page_number }}">next</a>
+                    <a href="?page={{ members.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
         </div>
       </main>
 </div>
