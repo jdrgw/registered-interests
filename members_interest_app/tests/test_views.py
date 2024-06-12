@@ -45,3 +45,32 @@ class MembersOfParliamentViewTest(TestCase):
         self.assertEquals(total_members_count, self.range - 1)
         self.assertEqual(total_pages, members.paginator.num_pages)
 
+
+class TestMemberProfileView(TestCase):
+    def setUp(self):
+        # Create a test member of parliament
+        self.member = MemberOfParliament.objects.create(
+            name="Ron Swanson",
+            api_id="123",
+            gender="Male",
+            thumbnail_url="http://example.com/image.jpg",
+            constituency="Example Constituency",
+            membership_start="2020-01-01",
+            membership_end="2024-01-01",
+            membership_end_reason="Resigned",
+            membership_end_notes="Dislikes government, extreme libertarian",
+            house="House of Commons"
+        )
+
+    def test_existing_member(self):
+        client = Client()
+        response = client.get(reverse("member", args=[self.member.pk]))
+
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, "members_interest_app/member.html")
+        self.assertContains(response, self.member.name)
+    
+    def test_non_existent_member(self):
+        client = Client()
+        response = client.get(reverse("member", args=[0]))
+        self.assertEquals(response.status_code, 404)

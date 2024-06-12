@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from .models import (
     MemberOfParliament
@@ -14,6 +14,7 @@ def members_of_parliament(request):
     members = (
         MemberOfParliament.objects.all()
         .values(
+            "id",
             "name",
             "gender",
             "thumbnail_url",
@@ -35,3 +36,11 @@ def members_of_parliament(request):
     }
 
     return render(request, 'members_interest_app/members-of-parliament.html', context)
+
+def member(request, pk):
+    member = get_object_or_404(MemberOfParliament, pk=pk)
+    context = {
+        "member": member
+    }
+    return render(request, 'members_interest_app/member.html', context)
+
