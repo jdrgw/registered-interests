@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 class TestUnpackSaveMembersDataFunction(TestCase):
     @mock.patch('members_interest_app.utils.os.path.dirname', return_value='/mocked/directory')
-    @mock.patch('members_interest_app.utils.os.path.abspath', side_effect=lambda path: path.replace('/mocked/absolute/test/path', '/Users/jamie/repos/parliament_repo/parliament_data/members_interest_app/'))
+    @mock.patch('members_interest_app.utils.os.path.abspath', side_effect=lambda path: path.replace('/mocked/absolute/test/path', '/anonymised/path/to/parliament_data/members_interest_app/'))
     @mock.patch('members_interest_app.utils.open', new_callable=mock.mock_open, 
                 read_data='''[
                     {
@@ -54,7 +54,7 @@ class TestUnpackSaveMembersDataFunction(TestCase):
         self.assertEqual(member.house, 'House of Commons')
 
     @mock.patch('members_interest_app.utils.os.path.dirname', return_value='/mocked/directory')
-    @mock.patch('members_interest_app.utils.os.path.abspath', side_effect=lambda path: path.replace('/mocked/absolute/test/path', '/Users/jamie/repos/parliament_repo/parliament_data/members_interest_app/'))
+    @mock.patch('members_interest_app.utils.os.path.abspath', side_effect=lambda path: path.replace('/mocked/absolute/test/path', '/anonymised/path/to/parliament_data/members_interest_app/'))
     def test_unpack_save_members_data_file_not_found(self, mock_abspath, mock_dirname):
         """
         Test that the unpack_save_members_data function handles file not found error
@@ -65,7 +65,7 @@ class TestUnpackSaveMembersDataFunction(TestCase):
 
 
     @mock.patch('members_interest_app.utils.os.path.dirname', return_value='/mocked/directory')
-    @mock.patch('members_interest_app.utils.os.path.abspath', side_effect=lambda path: path.replace('/mocked/absolute/test/path', '/Users/jamie/repos/parliament_repo/parliament_data/members_interest_app/'))
+    @mock.patch('members_interest_app.utils.os.path.abspath', side_effect=lambda path: path.replace('/mocked/absolute/test/path', '/anonymised/path/to/parliament_data/members_interest_app/'))
     def test_unpack_save_members_data_json_decode_error(self, mock_abspath, mock_dirname):
         """
         Test that the unpack_save_members_data function handles JSON decoding error
@@ -77,7 +77,7 @@ class TestUnpackSaveMembersDataFunction(TestCase):
                 unpack_save_members_data()
 
     @mock.patch('members_interest_app.utils.os.path.dirname', return_value='/mocked/directory')
-    @mock.patch('members_interest_app.utils.os.path.abspath', side_effect=lambda path: path.replace('/mocked/absolute/test/path', '/Users/jamie/repos/parliament_repo/parliament_data/members_interest_app/'))
+    @mock.patch('members_interest_app.utils.os.path.abspath', side_effect=lambda path: path.replace('/mocked/absolute/test/path', '/anonymised/path/to/parliament_data/members_interest_app/s'))
     def test_unpack_save_members_data_null_api_id(self, mock_abspath, mock_dirname):
         """
         Test that the unpack_save_members_data function handles null or None api_id
