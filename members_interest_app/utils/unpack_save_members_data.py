@@ -5,7 +5,7 @@ import json
 import logging
 from datetime import datetime
 from django.utils import timezone
-from .models import MemberOfParliament 
+from members_interest_app.models import MemberOfParliament 
 from django.db import transaction
 
 
@@ -25,24 +25,21 @@ def unpack_save_members_data():
     total_errors = 0
 
     current_dir = os.path.dirname(os.path.realpath(__file__))
-    members_json_file = os.path.join(current_dir, "../../call_members_api/members_of_parliament.json")
+    members_json_file = os.path.join(current_dir, "../../../call_members_api/members_of_parliament.json")
 
     # check whether JSON file exists
     try:
         with open(members_json_file, "r") as f:
             data = json.load(f)
     except FileNotFoundError as fnfe:
-        print("FNFE ", fnfe)
         logger.error(f"File {members_json_file} not found.")
         total_errors+=1
         raise fnfe
     except json.JSONDecodeError as jde:
-        print("JDE ", jde)
         logger.error(f"Error decoding JSON in file {members_json_file}.")
         total_errors+=1
         raise jde
     except Exception as e:
-        print("E ", e)
         logger.error(f"An unexpected error occurred while processing JSON file: {e}")
         total_errors+=1
         raise e
