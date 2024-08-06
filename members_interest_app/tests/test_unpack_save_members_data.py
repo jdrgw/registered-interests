@@ -2,7 +2,7 @@ import os
 import json
 from django.test import TestCase
 from unittest import mock
-from members_interest_app.utils.utils import unpack_save_members_data
+from members_interest_app.utils.unpack_save_members_data import unpack_save_members_data
 from members_interest_app.models import MemberOfParliament
 from django.core.exceptions import ObjectDoesNotExist
 

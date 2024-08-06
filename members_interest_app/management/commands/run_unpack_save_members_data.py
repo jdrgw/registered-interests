@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from members_interest_app.utils.utils import unpack_save_members_data
+from members_interest_app.utils.unpack_save_members_data import unpack_save_members_data
 
 class Command(BaseCommand):
     help = "run the custom util function unpack_save_members_data to download and save MPs to the database"
