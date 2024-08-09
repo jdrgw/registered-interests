@@ -5,11 +5,11 @@ from unittest import mock
 from members_interest_app.utils.unpack_save_members_data import unpack_save_members_data
 from members_interest_app.models import MemberOfParliament
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.conf import settings
 
 class TestUnpackSaveMembersDataFunction(TestCase):
-    @mock.patch('os.path.dirname', return_value='/mocked/directory')
-    @mock.patch('os.path.abspath', side_effect=lambda path: path.replace('/mocked/absolute/test/path', '/anonymised/path/to/parliament_data/members_interest_app/'))
+
+    @mock.patch('django.conf.settings.BASE_DIR', new='/mocked/base/dir')
     @mock.patch('builtins.open', new_callable=mock.mock_open, 
                 read_data='''[
                     {
@@ -29,17 +29,15 @@ class TestUnpackSaveMembersDataFunction(TestCase):
                         }
                     }
                 ]''')
-    def test_unpack_save_members_data(self, mock_open, mock_abspath, mock_dirname):
+    def test_unpack_save_members_data(self, mock_open):
         """
         Test that the unpack_save_members_data function works as expected
         """
-        current_dir = os.path.abspath(os.path.dirname(__file__))
-        members_json_file = os.path.abspath(os.path.join(current_dir, '../../../call_members_api/members_of_parliament.json'))
-        
-        run = unpack_save_members_data()
+        # Pass a test file name
+        result = unpack_save_members_data(file_name='mocked_file.json')
 
         # Check that the open function was called with the correct arguments
-        mock_open.assert_called_once_with(members_json_file, 'r')
+        mock_open.assert_called_once_with(os.path.join(settings.BASE_DIR, "data/members_data/raw_data", 'mocked_file.json'), 'r')
 
         # Check that the MemberOfParliament objects were created/updated correctly
         member = MemberOfParliament.objects.get(api_id=1)
@@ -53,32 +51,34 @@ class TestUnpackSaveMembersDataFunction(TestCase):
         self.assertEqual(member.membership_end_notes, 'Retired due to age')
         self.assertEqual(member.house, 'House of Commons')
 
-    @mock.patch('os.path.dirname', return_value='/mocked/directory')
-    @mock.patch('os.path.abspath', side_effect=lambda path: path.replace('/mocked/absolute/test/path', '/anonymised/path/to/parliament_data/members_interest_app/'))
-    def test_unpack_save_members_data_file_not_found(self, mock_abspath, mock_dirname):
+        # Expected output string
+        expected_output = "Total members added: 1, Total members updated: 0, Total errors: 0"
+        
+        # Assert the output is as expected
+        self.assertEqual(result, expected_output)
+
+    @mock.patch('django.conf.settings.BASE_DIR', new='/mocked/base/dir')
+    def test_unpack_save_members_data_file_not_found(self):
         """
         Test that the unpack_save_members_data function handles file not found error
         """
         with self.assertRaises(FileNotFoundError):
-            # Call the function
-            unpack_save_members_data()
+            # Call the function with a non-existent file
+            unpack_save_members_data(file_name='non_existent_file.json')
 
-
-    @mock.patch('os.path.dirname', return_value='/mocked/directory')
-    @mock.patch('os.path.abspath', side_effect=lambda path: path.replace('/mocked/absolute/test/path', '/anonymised/path/to/parliament_data/members_interest_app/'))
-    def test_unpack_save_members_data_json_decode_error(self, mock_abspath, mock_dirname):
+    @mock.patch('django.conf.settings.BASE_DIR', new='/mocked/base/dir')
+    def test_unpack_save_members_data_json_decode_error(self):
         """
         Test that the unpack_save_members_data function handles JSON decoding error
         """
         with mock.patch('builtins.open', new_callable=mock.mock_open, 
                         read_data='Invalid JSON'):
             with self.assertRaises(json.JSONDecodeError):
-                # Call the function
-                unpack_save_members_data()
+                # Call the function with the mocked invalid JSON data
+                unpack_save_members_data(file_name='mocked_file.json')
 
-    @mock.patch('os.path.dirname', return_value='/mocked/directory')
-    @mock.patch('os.path.abspath', side_effect=lambda path: path.replace('/mocked/absolute/test/path', '/anonymised/path/to/parliament_data/members_interest_app/'))
-    def test_unpack_save_members_data_null_api_id(self, mock_abspath, mock_dirname):
+    @mock.patch('django.conf.settings.BASE_DIR', new='/mocked/base/dir')
+    def test_unpack_save_members_data_null_api_id(self):
         """
         Test that the unpack_save_members_data function handles null or None api_id
         """
@@ -102,9 +102,42 @@ class TestUnpackSaveMembersDataFunction(TestCase):
                             }
                         ]'''):
             
-            # Call the function
-            unpack_save_members_data()
+            # Call the function with the mocked data where id is null
+            unpack_save_members_data(file_name='mocked_file.json')
 
             # Ensure no MemberOfParliament object is created with null api_id
             with self.assertRaises(ObjectDoesNotExist):
                 MemberOfParliament.objects.get(name='John Doe')
+
+    @mock.patch('builtins.open', new_callable=mock.mock_open, 
+                read_data='''[
+                    {
+                        "value": {
+                            "id": 1,
+                            "nameDisplayAs": "John Doe",
+                            "gender": "Male",
+                            "thumbnailUrl": "http://example.com",
+                            "latestHouseMembership": {
+                                "membershipFrom": "London",
+                                "membershipStartDate": "2024-01-01T00:00:00",
+                                "membershipEndDate": "2024-12-31T00:00:00",
+                                "membershipEndReason": "Retired",
+                                "membershipEndReasonNotes": "Retired due to age",
+                                "house": 1
+                            }
+                        }
+                    }
+                ]''')
+    @mock.patch('django.conf.settings.BASE_DIR', new='/mocked/base/dir')
+    def test_unpack_save_members_data_output_string(self, mock_open):
+        """
+        Test that the unpack_save_members_data function returns the correct output string
+        """
+        # Run the utility function
+        result = unpack_save_members_data(file_name='mocked_file.json')
+
+        # Expected output string
+        expected_output = "Total members added: 1, Total members updated: 0, Total errors: 0"
+        
+        # Assert the output is as expected
+        self.assertEqual(result, expected_output)
