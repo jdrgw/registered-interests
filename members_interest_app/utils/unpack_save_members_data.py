@@ -5,14 +5,15 @@ import json
 import logging
 from datetime import datetime
 from django.utils import timezone
-from members_interest_app.models import MemberOfParliament 
+from django.conf import settings  # Ensure this is imported
+from members_interest_app.models import MemberOfParliament
 from django.db import transaction
-
 
 logger = logging.getLogger(__name__)
 
 @transaction.atomic
-def unpack_save_members_data():
+def unpack_save_members_data(file_name):
+
 
     """
     Unpacks data about Members of Parliament pulled from Parliament API stored above django project directory.
@@ -24,9 +25,8 @@ def unpack_save_members_data():
     total_updated = 0
     total_errors = 0
 
-    current_dir = os.path.dirname(os.path.realpath(__file__))
-    members_json_file = os.path.join(current_dir, "../../../call_members_api/members_of_parliament.json")
-
+    members_json_file = os.path.join(settings.BASE_DIR, "data/members_data/raw_data", file_name)
+    
     # check whether JSON file exists
     try:
         with open(members_json_file, "r") as f:
@@ -58,6 +58,10 @@ def unpack_save_members_data():
             try:
                 # TODO: explore bulk update or save for effficient
                 api_id = mps.get("id")
+                if api_id is None:
+                    logger.error(f"Skipping entry due to missing api_id. Member data: {mps}")
+                    total_errors += 1
+                    continue
 
                 # Get membership start and end dates, handling None values
                 membership_start_str = seat_data.get("membershipStartDate")
