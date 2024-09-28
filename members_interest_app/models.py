@@ -26,6 +26,8 @@ class MemberOfParliament(models.Model):
     membership_end_reason = models.CharField(max_length=255, null=True)
     membership_end_notes = models.TextField(null=True)
     house = models.CharField(max_length=255, default="TBC")
+    house_fk = models.ForeignKey("House", on_delete=models.CASCADE, null=True)
+
 
     def __str__(self):
         return f"{self.name}, {self.house}, {self.constituency}"
