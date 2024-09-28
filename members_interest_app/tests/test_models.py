@@ -1,6 +1,9 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
-from members_interest_app.models import MemberOfParliament
+from members_interest_app.models import (
+    House,
+    MemberOfParliament,
+)
 
 class TestMemberOfParliament(TestCase):
     
@@ -63,6 +66,31 @@ class TestMemberOfParliament(TestCase):
         member.refresh_from_db()  # Reload the member from the database to ensure changes were saved
         self.assertEqual(member.api_id, "4321")
         self.assertEqual(member.name, "Randy")
+
+
+class TestHouse(TestCase):
+
+    def setUp(self):
+        self.commons = (
+            House
+            .objects
+            .create(
+                name="commons"
+            )
+        )
+
+    def test_string_print(self):
+        # test whether str returns expected value
+        expected_string = "commons"
+        self.assertEqual(str(self.commons), expected_string)
+
+    def test_no_name(self):
+        "Test that creating a House without a name raises ValidationError"
+        with self.assertRaises(ValidationError):
+            # Create a House with name=None, which should raise a ValidationError
+            house = House(name=None)
+            house.full_clean()
+
 
 
 

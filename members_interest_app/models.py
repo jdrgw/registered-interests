@@ -1,6 +1,13 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
+class House(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255, null=False)
+
+    def __str__(self):
+        return f"{self.name}"
+
 
 # Create your models here.
 class MemberOfParliament(models.Model):
@@ -19,7 +26,6 @@ class MemberOfParliament(models.Model):
     membership_end_reason = models.CharField(max_length=255, null=True)
     membership_end_notes = models.TextField(null=True)
     house = models.CharField(max_length=255, default="TBC")
-
 
     def __str__(self):
         return f"{self.name}, {self.house}, {self.constituency}"
