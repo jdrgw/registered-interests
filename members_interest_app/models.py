@@ -25,7 +25,12 @@ class MemberOfParliament(models.Model):
     membership_end = models.DateTimeField(null=True)
     membership_end_reason = models.CharField(max_length=255, null=True)
     membership_end_notes = models.TextField(null=True)
-    house = models.ForeignKey("House", on_delete=models.CASCADE, null=True)
+    house = models.ForeignKey(
+        "House",
+        on_delete=models.PROTECT,
+        null=False,
+        default=1  # ID of the "Unknown" House
+    )
 
 
     def __str__(self):

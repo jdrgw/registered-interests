@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from members_interest_app.models import (
@@ -8,7 +9,6 @@ from members_interest_app.models import (
 class TestMemberOfParliament(TestCase):
     
     def setUp(self):
-        House.objects.all().delete() # 0004 migration file creates house objects
         self.trailer = House.objects.create(name="Trailer")
 
         self.member1 = (
@@ -69,6 +69,11 @@ class TestMemberOfParliament(TestCase):
         member.refresh_from_db()  # Reload the member from the database to ensure changes were saved
         self.assertEqual(member.api_id, "4321")
         self.assertEqual(member.name, "Randy")
+    
+    def test_house_field_defaults_to_unknown(self):
+        unknown_house = House.objects.get(name="Unknown")
+        self.assertEqual(self.member2.house, unknown_house)
+
 
 
 class TestHouse(TestCase):
