@@ -8,13 +8,16 @@ from members_interest_app.models import (
 class TestMemberOfParliament(TestCase):
     
     def setUp(self):
+        House.objects.all().delete() # 0004 migration file creates house objects
+        self.trailer = House.objects.create(name="Trailer")
+
         self.member1 = (
             MemberOfParliament
             .objects
             .create(
                 api_id=1234, 
                 name="Jim Lahey",
-                house="Trailer",
+                house=self.trailer,
                 constituency="Trailer Park"
             )
         )
