@@ -35,7 +35,6 @@ class TestUnpackSaveMembersDataFunction(TestCase):
     fake_data_json = json.dumps(fake_data)
 
     def setUp(self):
-        House.objects.all().delete() # 0004 migration file creates house objects
         House.objects.get_or_create(id=1, defaults={"name": "Unknown"})
         House.objects.get_or_create(id=2, defaults={"name": "House of Commons"})
         House.objects.get_or_create(id=3, defaults={"name": "House of Lords"})
