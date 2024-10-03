@@ -6,7 +6,7 @@ import logging
 from datetime import datetime
 from django.utils import timezone
 from django.conf import settings  # Ensure this is imported
-from members_interest_app.models import MemberOfParliament
+from members_interest_app.models import MemberOfParliament, House
 from django.db import transaction
 
 logger = logging.getLogger(__name__)
@@ -44,10 +44,14 @@ def unpack_save_members_data(file_name):
         total_errors+=1
         raise e
 
-    # Loop through JSON objects and save to or update to database 
+    # Loop through JSON objects and save to or update to database
+    unknown = House.objects.get(name="Unknown")
+    house_of_commons = House.objects.get(name="House of Commons")
+    house_of_lords = House.objects.get(name="House of Lords")
+
     house_mapping = {
-        1: "House of Commons",
-        2: "House of Lords"
+        1: house_of_commons,
+        2: house_of_lords
     }
 
     for obj in data:
@@ -91,7 +95,7 @@ def unpack_save_members_data(file_name):
                         "membership_end": membership_end_aware,
                         "membership_end_reason": seat_data.get("membershipEndReason", "Undisclosed"),
                         "membership_end_notes": seat_data.get("membershipEndReasonNotes", "Undisclosed"),
-                        "house": house_mapping.get(seat_data.get("house"), "TBC")
+                        "house": house_mapping.get(seat_data.get("house"), unknown)
                     }
                 )
                 if created:

@@ -17,10 +17,3 @@ class TestUrls(SimpleTestCase):
         url = reverse('members-of-parliament')
 
         self.assertEquals(resolve(url).func, members_of_parliament)
-
-
-
-# urlpatterns = [
-#     path('', views.index, name='index-page'),
-#     path('members-of-parliament/', views.members_of_parliament, name='members-of-parliament'),
-# ]

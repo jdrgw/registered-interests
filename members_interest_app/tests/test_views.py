@@ -1,7 +1,8 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from members_interest_app.models import (
-    MemberOfParliament
+    MemberOfParliament,
+    House
 )
 from django.core.paginator import Page
 import json
@@ -28,7 +29,6 @@ class MembersOfParliamentViewTest(TestCase):
             )
         self.response = self.client.get(reverse("members-of-parliament"))
 
-
     def test_members_of_parliament_view_response(self):
         self.assertEquals(self.response.status_code, 200)
         self.assertTemplateUsed(self.response, "members_interest_app/members-of-parliament.html")
@@ -48,6 +48,10 @@ class MembersOfParliamentViewTest(TestCase):
 
 class TestMemberProfileView(TestCase):
     def setUp(self):
+
+        House.objects.all().delete() # 0004 migration file creates house objects
+        House.objects.create(name="House of Commons")
+
         # Create a test member of parliament
         self.member = MemberOfParliament.objects.create(
             name="Ron Swanson",
@@ -59,7 +63,7 @@ class TestMemberProfileView(TestCase):
             membership_end="2024-01-01",
             membership_end_reason="Resigned",
             membership_end_notes="Dislikes government, extreme libertarian",
-            house="House of Commons"
+            house=House.objects.get(name="House of Commons")
         )
 
     def test_existing_member(self):
