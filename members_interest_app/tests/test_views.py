@@ -1,12 +1,6 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from members_interest_app.models import (
-    MemberOfParliament,
-    House
-)
-from django.core.paginator import Page
-import json
-import sys
+from members_interest_app.models import MemberOfParliament, House
 
 
 class TestViews(TestCase):
@@ -17,21 +11,20 @@ class TestViews(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, "members_interest_app/index.html")
 
-class MembersOfParliamentViewTest(TestCase):
 
+class MembersOfParliamentViewTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.range = 40
         for i in range(1, self.range):
-            MemberOfParliament.objects.create(
-                name = f"member {i}",
-                api_id = f"{i}"
-            )
+            MemberOfParliament.objects.create(name=f"member {i}", api_id=f"{i}")
         self.response = self.client.get(reverse("members-of-parliament"))
 
     def test_members_of_parliament_view_response(self):
         self.assertEquals(self.response.status_code, 200)
-        self.assertTemplateUsed(self.response, "members_interest_app/members-of-parliament.html")
+        self.assertTemplateUsed(
+            self.response, "members_interest_app/members-of-parliament.html"
+        )
 
     def test_num_members_and_pages(self):
         members = self.response.context["members"]
@@ -48,8 +41,7 @@ class MembersOfParliamentViewTest(TestCase):
 
 class TestMemberProfileView(TestCase):
     def setUp(self):
-
-        House.objects.all().delete() # 0004 migration file creates house objects
+        House.objects.all().delete()  # 0004 migration file creates house objects
         House.objects.create(name="House of Commons")
 
         # Create a test member of parliament
@@ -63,7 +55,7 @@ class TestMemberProfileView(TestCase):
             membership_end="2024-01-01",
             membership_end_reason="Resigned",
             membership_end_notes="Dislikes government, extreme libertarian",
-            house=House.objects.get(name="House of Commons")
+            house=House.objects.get(name="House of Commons"),
         )
 
     def test_existing_member(self):
@@ -73,7 +65,7 @@ class TestMemberProfileView(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, "members_interest_app/member.html")
         self.assertContains(response, self.member.name)
-    
+
     def test_non_existent_member(self):
         client = Client()
         response = client.get(reverse("member", args=[0]))

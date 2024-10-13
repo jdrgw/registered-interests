@@ -1,0 +1,19 @@
+# default config https://docs.astral.sh/ruff/configuration
+
+extend-exclude = [
+    "env/",
+    "*.pyc",
+    "*.sqlite3",
+    "*.log",
+    "*.DS_Store",
+#    "!members_interest_app/migrations/0004_memberofparliament_house_fk_data_migration.py" todo: work out how to include file from excluded directory,
+    "members_interest_app/migrations",    
+    "static/*",
+    "media/*",
+    "*.gitignore",
+    "*.keep",
+    "*.sample",
+    "*.sql",
+    "*.json"
+]
+
