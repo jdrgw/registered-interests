@@ -12,6 +12,7 @@ BATCH_SIZE = 10
 BAD_STATUSES = [429, 500, 502, 503, 504]
 TERMINATION_THRESHOLD = 250
 
+
 def append_to_json_file(data, title):
     """
     Append data to a JSON file.
@@ -28,14 +29,13 @@ def append_to_json_file(data, title):
         existing_data = []
         existing_data.append(data)
 
-
     # Ensure no duplicates
     if data not in existing_data:
         existing_data.append(data)
-    
+
     with open(title, "w") as outfile:
         json.dump(existing_data, outfile, indent=4)
-    
+
     # # Debug statement - retain for later debugging.
     # print(f"Data written to {title}: {existing_data}")
 
@@ -59,11 +59,12 @@ def test_json_validity(response, index):
 
     except ValueError:
         content = {
-            "content": response.content.decode('utf-8'),
+            "content": response.content.decode("utf-8"),
             "status_code": status_code,
-            "searched_index": index
+            "searched_index": index,
         }
     return content
+
 
 def fetch_members_data():
     n = list(range(1, 6000))
@@ -73,10 +74,16 @@ def fetch_members_data():
     termination_condition = False
 
     today_date = datetime.now().strftime("%Y-%m-%d")
-    
+
     # Paths to save files with date
-    json_file_path = os.path.join(settings.BASE_DIR, 'data', 'members_data', 'raw_data', f'members_of_parliament_{today_date}.json')
-    
+    json_file_path = os.path.join(
+        settings.BASE_DIR,
+        "data",
+        "members_data",
+        "raw_data",
+        f"members_of_parliament_{today_date}.json",
+    )
+
     # Ensure the directory exists
     os.makedirs(os.path.dirname(json_file_path), exist_ok=True)
 
@@ -85,7 +92,7 @@ def fetch_members_data():
     print(f"Fetching data and saving to {json_file_path}")
 
     for i in range(0, len(n), BATCH_SIZE):
-        batch = n[i:i + BATCH_SIZE]  # create batch
+        batch = n[i : i + BATCH_SIZE]  # create batch
 
         for index in batch:
             if index % 200 == 0:
@@ -124,11 +131,13 @@ def fetch_members_data():
                 status_code = response.status_code
                 status_log.append(status_code)
                 # creating logging entry for debugging
-                logging.info(f"Index: {index}, Status Code: {status_code}, Response Time: {response_time} seconds, Response Headers: {response.headers}")
+                logging.info(
+                    f"Index: {index}, Status Code: {status_code}, Response Time: {response_time} seconds, Response Headers: {response.headers}"
+                )
 
                 # handle bad statuses by implementing server recommended wait time or exponential backoff
                 if status_code in BAD_STATUSES:
-                    retry_after = response.headers.get('Retry-After')
+                    retry_after = response.headers.get("Retry-After")
                     if retry_after:
                         wait_time = int(retry_after) + 2
                         time.sleep(wait_time)
@@ -139,10 +148,19 @@ def fetch_members_data():
                     break
 
             # break out of loop if last TERMINATION_THRESHOLD statuses are bad and set termination flag to break out of outer loop too
-            if len(status_log) >= TERMINATION_THRESHOLD and (
-                all(element in BAD_STATUSES for element in status_log[-TERMINATION_THRESHOLD:])
-                # 404 is bad status but treated separately as lots of ids 404 and i aim to reduce # attempts
-                or all(element == 404 for element in status_log[-TERMINATION_THRESHOLD:])
+            if (
+                len(status_log) >= TERMINATION_THRESHOLD
+                and (
+                    all(
+                        element in BAD_STATUSES
+                        for element in status_log[-TERMINATION_THRESHOLD:]
+                    )
+                    # 404 is bad status but treated separately as lots of ids 404 and i aim to reduce # attempts
+                    or all(
+                        element == 404
+                        for element in status_log[-TERMINATION_THRESHOLD:]
+                    )
+                )
             ):
                 termination_condition = True
                 break
