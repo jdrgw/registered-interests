@@ -1,4 +1,3 @@
-from django.db import IntegrityError
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from members_interest_app.models import (

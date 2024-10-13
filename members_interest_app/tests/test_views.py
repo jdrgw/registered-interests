@@ -4,9 +4,7 @@ from members_interest_app.models import (
     MemberOfParliament,
     House
 )
-from django.core.paginator import Page
-import json
-import sys
+
 
 
 class TestViews(TestCase):

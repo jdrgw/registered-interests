@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from members_interest_app.utils.unpack_save_members_data import unpack_save_members_data
 
 class Command(BaseCommand):

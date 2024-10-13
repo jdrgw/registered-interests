@@ -1,4 +1,3 @@
-import os
 import json
 from django.test import TestCase
 from unittest import mock
@@ -6,7 +5,6 @@ from unittest.mock import mock_open, patch
 from members_interest_app.utils.unpack_save_members_data import unpack_save_members_data
 from members_interest_app.models import MemberOfParliament, House
 from django.core.exceptions import ObjectDoesNotExist
-from django.conf import settings
 from django.db import connection
 
 
@@ -44,7 +42,7 @@ class TestUnpackSaveMembersDataFunction(TestCase):
     @patch("os.path.join", return_value="fake_path.json")
     def test_file_opened(self, mock_join, mock_open):
         fake_file_path = "fake_path.json"
-        result = unpack_save_members_data(fake_file_path)
+        result = unpack_save_members_data(fake_file_path)  # noqa F841
         mock_open.assert_called_once_with(fake_file_path, 'r')
 
    
@@ -52,7 +50,7 @@ class TestUnpackSaveMembersDataFunction(TestCase):
     @patch("os.path.join", return_value="fake_path.json")
     def test_file_processed(self, mock_join, mock_open):
         fake_file_path = "fake_path.json"
-        result = unpack_save_members_data(fake_file_path)
+        result = unpack_save_members_data(fake_file_path)  # noqa F841
 
         member = MemberOfParliament.objects.get(api_id=1)
         house_of_commons = House.objects.get(name="House of Commons")
