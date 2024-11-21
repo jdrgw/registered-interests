@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
+
 from members_interest_app.utils.call_members_api import fetch_members_data
 
 

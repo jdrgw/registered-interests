@@ -1,11 +1,13 @@
 import json
-from django.test import TestCase
 from unittest import mock
 from unittest.mock import mock_open, patch
-from members_interest_app.utils.unpack_save_members_data import unpack_save_members_data
-from members_interest_app.models import MemberOfParliament, House
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import connection
+from django.test import TestCase
+
+from members_interest_app.models import House, MemberOfParliament
+from members_interest_app.utils.unpack_save_members_data import unpack_save_members_data
 
 
 class TestUnpackSaveMembersDataFunction(TestCase):

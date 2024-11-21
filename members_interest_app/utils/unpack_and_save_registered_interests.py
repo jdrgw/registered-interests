@@ -1,15 +1,17 @@
-import os
 import csv
 import json
-import pandas as pd
+import os
 import re
-from collections import defaultdict
 import textwrap
+from collections import defaultdict
+
 import numpy as np
+import pandas as pd
 from dateutil import parser
-from django.utils import timezone
-from members_interest_app.models import RegisteredInterest, MemberOfParliament
 from django.db import models, transaction
+from django.utils import timezone
+
+from members_interest_app.models import MemberOfParliament, RegisteredInterest
 
 # TODO: lots of this could be improved and streamlined, see further todos
 

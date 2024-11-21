@@ -1,7 +1,8 @@
-from django.test import TestCase
-from django.core.management import call_command
-from unittest.mock import patch
 from io import StringIO
+from unittest.mock import patch
+
+from django.core.management import call_command
+from django.test import TestCase
 
 
 class TestRunUnpackSaveMembersDataCommand(TestCase):

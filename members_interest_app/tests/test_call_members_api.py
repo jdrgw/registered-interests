@@ -1,9 +1,11 @@
-import os
 import json
-from django.test import TestCase
-from django.conf import settings
+import os
 from unittest.mock import patch
+
 import responses
+from django.conf import settings
+from django.test import TestCase
+
 from members_interest_app.utils.call_members_api import fetch_members_data
 
 

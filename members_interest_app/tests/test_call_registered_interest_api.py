@@ -1,10 +1,11 @@
-from unittest.mock import patch, mock_open, MagicMock
-from members_interest_app.utils.call_registered_interests import (
-    extract_api_ids_from_file,
-    call_api_and_save_data,
-)
+from unittest.mock import MagicMock, mock_open, patch
 
 from django.test import TestCase
+
+from members_interest_app.utils.call_registered_interests import (
+    call_api_and_save_data,
+    extract_api_ids_from_file,
+)
 
 
 class TestExtractApiIds(TestCase):

@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
+
 from members_interest_app.utils.call_registered_interests import call_api_and_save_data
 
 
