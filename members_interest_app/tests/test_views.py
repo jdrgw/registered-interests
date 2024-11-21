@@ -1,6 +1,7 @@
-from django.test import TestCase, Client
+from django.test import Client, TestCase
 from django.urls import reverse
-from members_interest_app.models import MemberOfParliament, House
+
+from members_interest_app.models import House, MemberOfParliament
 
 
 class TestViews(TestCase):

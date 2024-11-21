@@ -1,8 +1,9 @@
-import tempfile
-import os
 import json
+import os
+import tempfile
 from unittest import TestCase
 from unittest.mock import patch
+
 from members_interest_app.utils.call_registered_interests import call_api_and_save_data
 
 
