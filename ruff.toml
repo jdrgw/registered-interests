@@ -17,6 +17,6 @@ extend-exclude = [
     "*.json"
 ]
 
-extend-select = [
+lint.extend-select = [
     "I"
 ] 
