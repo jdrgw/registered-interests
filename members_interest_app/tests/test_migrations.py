@@ -1,5 +1,5 @@
-from django_test_migrations.contrib.unittest_case import MigratorTestCase
 from django.db import connection
+from django_test_migrations.contrib.unittest_case import MigratorTestCase
 
 
 class TestMigration0004(MigratorTestCase):

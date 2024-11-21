@@ -1,10 +1,11 @@
-import os
-import requests
 import json
-import time
 import logging
-from django.conf import settings
+import os
+import time
 from datetime import datetime
+
+import requests
+from django.conf import settings
 
 ATTEMPTS = 3
 INITIAL_WAIT = 5

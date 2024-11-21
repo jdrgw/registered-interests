@@ -1,14 +1,14 @@
-import os
-import sys
-import django
-from django.conf import settings
-import re
-import requests
 import json
-from datetime import datetime
+import os
+import re
+import sys
 import time
 import traceback
+from datetime import datetime
 
+import django
+import requests
+from django.conf import settings
 
 # MAKE FUNCTION CALLABLE WITHOUT MGMT COMMAND TEMPORARILY FOR PROTOTYPING
 

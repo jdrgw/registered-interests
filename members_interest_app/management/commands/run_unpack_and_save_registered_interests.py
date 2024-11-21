@@ -1,11 +1,12 @@
 # members_interest_app/management/commands/process_registered_interests.py
 
 from django.core.management.base import BaseCommand
+
 from members_interest_app.utils.unpack_registered_interests import (
-    extract_preprocess_interest_data,
-    extract_currencies_and_amounts,
-    extract_third_party_details,
     clean_and_save_to_database,
+    extract_currencies_and_amounts,
+    extract_preprocess_interest_data,
+    extract_third_party_details,
 )
 
 
