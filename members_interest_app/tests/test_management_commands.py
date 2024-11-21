@@ -48,5 +48,5 @@ class TestCallMembersAPI(TestCase):
 
 class Test_unpack_and_save_registred_interest(TestCase):
     "This class is intentionally left blank as the management command is not directly tested."
-    pass
 
+    pass

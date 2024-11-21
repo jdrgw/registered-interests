@@ -9,7 +9,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--file_name",
             type=str,
-            help="Optional: The JSON file where the registered interest data will be extracted from and/or saved. If not provided, a default file will be used."
+            help="Optional: The JSON file where the registered interest data will be extracted from and/or saved. If not provided, a default file will be used.",
         )
 
     def handle(self, *args, **kwargs):

@@ -86,44 +86,43 @@ class TestHouse(TestCase):
 
 
 class RegisteredInterestModelTests(TestCase):
-
     def setUp(self):
-        self.mp = MemberOfParliament.objects.create(api_id='123', name='Ron Swanson')
+        self.mp = MemberOfParliament.objects.create(api_id="123", name="Ron Swanson")
 
     def test_save_registered_interest_with_valid_mp(self):
         registered_interest = RegisteredInterest(
-        member_of_parliament=self.mp, 
-        api_id='interest_001',
-        unique_api_generated_id='unique_id_001', 
-        category_id='category_001',
-        category_name='Category Name',
-        sort_order='1',
-        interest_summary='Summary of interest',
-        date_created=timezone.now(),
-        date_last_amended=timezone.now(),
-        date_deleted=None,  
-        is_correction=False,
-        is_child_interest=False,
-        parent_interest="1", 
-        interest_amount=100.00,
-        interest_currency='GBP',
-        number_of_extracted_amounts=None,
-        contains_loan=False,
-        contains_time_period=None,
-        payer='John Smith',
-        payer_type='person',
-        payer_address=None,
-        payer_companies_house_id=None,
-        purpose='Purpose of the interest',
-        role='Role in interest',
-        employer_name='Pawnee',
-        family_member_name=None,
-        family_member_relationship=None,
-        family_member_role=None,
-        family_member_paid_by_mp_or_parliament=None,
-        family_member_lobbies=True
+            member_of_parliament=self.mp,
+            api_id="interest_001",
+            unique_api_generated_id="unique_id_001",
+            category_id="category_001",
+            category_name="Category Name",
+            sort_order="1",
+            interest_summary="Summary of interest",
+            date_created=timezone.now(),
+            date_last_amended=timezone.now(),
+            date_deleted=None,
+            is_correction=False,
+            is_child_interest=False,
+            parent_interest="1",
+            interest_amount=100.00,
+            interest_currency="GBP",
+            number_of_extracted_amounts=None,
+            contains_loan=False,
+            contains_time_period=None,
+            payer="John Smith",
+            payer_type="person",
+            payer_address=None,
+            payer_companies_house_id=None,
+            purpose="Purpose of the interest",
+            role="Role in interest",
+            employer_name="Pawnee",
+            family_member_name=None,
+            family_member_relationship=None,
+            family_member_role=None,
+            family_member_paid_by_mp_or_parliament=None,
+            family_member_lobbies=True,
         )
-        
+
         try:
             registered_interest.save()
         except ValidationError:
@@ -131,22 +130,21 @@ class RegisteredInterestModelTests(TestCase):
 
         self.assertEqual(RegisteredInterest.objects.count(), 1)
 
-
     def test_save_registered_interest_with_invalid_mp(self):
         registered_interest = RegisteredInterest(
             member_of_parliament=None,  # Invalid member_of_parliament
-            api_id='interest_002',
-            unique_api_generated_id='unique_id_002',
-            category_id='category_002',
-            category_name='Category Name 2',
-            sort_order='2',
-            interest_summary='Summary of interest 2',
+            api_id="interest_002",
+            unique_api_generated_id="unique_id_002",
+            category_id="category_002",
+            category_name="Category Name 2",
+            sort_order="2",
+            interest_summary="Summary of interest 2",
             date_created=timezone.now(),
             date_last_amended=timezone.now(),
             date_deleted=None,
             is_correction=False,
             is_child_interest=False,
-            parent_interest="1", 
+            parent_interest="1",
             interest_amount=None,
             interest_currency=None,
             number_of_extracted_amounts=None,
@@ -157,29 +155,30 @@ class RegisteredInterestModelTests(TestCase):
             payer_address=None,
             payer_companies_house_id=None,
             purpose=None,
-            role='Role in interest',
-            employer_name='Pawnee',
+            role="Role in interest",
+            employer_name="Pawnee",
             family_member_name=None,
             family_member_relationship=None,
             family_member_role=None,
             family_member_paid_by_mp_or_parliament=None,
-            family_member_lobbies=True
+            family_member_lobbies=True,
         )
-        
+
         with self.assertRaises(IntegrityError):
             registered_interest.save()
-
 
     def test_string_representation(self):
         registered_interest = RegisteredInterest(
             member_of_parliament=self.mp,
-            api_id='interest_003',
-            category_id='category_003',
-            category_name='Category Name 3',
-            sort_order='3',
-            interest_summary='Another summary of interest',
+            api_id="interest_003",
+            category_id="category_003",
+            category_name="Category Name 3",
+            sort_order="3",
+            interest_summary="Another summary of interest",
             date_created=timezone.now(),
             date_last_amended=timezone.now(),
         )
-        
-        self.assertEqual(str(registered_interest), 'Category Name 3 - Another summary of interest')
+
+        self.assertEqual(
+            str(registered_interest), "Category Name 3 - Another summary of interest"
+        )
