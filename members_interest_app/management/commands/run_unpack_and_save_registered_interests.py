@@ -2,7 +2,7 @@
 
 from django.core.management.base import BaseCommand
 
-from members_interest_app.utils.unpack_registered_interests import (
+from members_interest_app.utils.unpack_and_save_registered_interests import (
     clean_and_save_to_database,
     extract_currencies_and_amounts,
     extract_preprocess_interest_data,

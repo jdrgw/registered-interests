@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 from dateutil import parser
 from django.db import models, transaction
+from django.db.models.fields import CharField
 from django.utils import timezone
 
 from members_interest_app.models import MemberOfParliament, RegisteredInterest
@@ -685,31 +686,37 @@ def bulk_save_data(df, batch_size=5000):
                     for field in df.columns
                     if hasattr(tup, field)
                 }
+
+                cleaned_instance_data = {
+                    key: None if pd.isna(value) and isinstance(RegisteredInterest._meta.get_field(key), CharField) else value
+                    for key, value in instance_data.items()
+                }
+
                 # Replace member_of_parliament field in instance_data with MemberOfParliament object
-                instance_data["member_of_parliament"] = members_dict.get(
-                    str(instance_data["member_of_parliament"])
+                cleaned_instance_data["member_of_parliament"] = members_dict.get(
+                    str(cleaned_instance_data["member_of_parliament"])
                 )
 
                 # make dates timezone aware
-                instance_data["date_created"] = make_dates_aware(
-                    instance_data["date_created"]
+                cleaned_instance_data["date_created"] = make_dates_aware(
+                    cleaned_instance_data["date_created"]
                 )
-                instance_data["date_last_amended"] = make_dates_aware(
-                    instance_data["date_last_amended"]
+                cleaned_instance_data["date_last_amended"] = make_dates_aware(
+                    cleaned_instance_data["date_last_amended"]
                 )
-                instance_data["date_deleted"] = make_dates_aware(
-                    instance_data["date_deleted"]
+                cleaned_instance_data["date_deleted"] = make_dates_aware(
+                    cleaned_instance_data["date_deleted"]
                 )
 
                 # Replace interest_amount NaN's with None to accomodate db field requirements
-                instance_data["interest_amount"] = (
+                cleaned_instance_data["interest_amount"] = (
                     None
-                    if pd.isna(instance_data["interest_amount"])
-                    else instance_data["interest_amount"]
+                    if pd.isna(cleaned_instance_data["interest_amount"])
+                    else cleaned_instance_data["interest_amount"]
                 )
 
                 # Create an instance of RegisteredInterest with the extracted data
-                instance = RegisteredInterest(**instance_data)
+                instance = RegisteredInterest(**cleaned_instance_data)
                 batch.append(instance)
 
                 # Calculate the current batch number based on the index and batch size
@@ -814,7 +821,7 @@ def check_and_adjust_column_types(dataframe: pd.DataFrame, model: models.Model):
                         dataframe[col], errors="coerce", downcast="float"
                     )
                 elif expected_t == "bool":
-                    dataframe[col] = dataframe[col].astype(bool)
+                    dataframe[col] = dataframe[col].fillna(False).astype(bool)
                 elif expected_t == "datetime64[ns]":
                     dataframe[col] = pd.to_datetime(dataframe[col], errors="coerce")
 
@@ -963,8 +970,9 @@ def extract_third_party_details(df):
 
     # extract details about employer and the role they provided to member of parliament
     merged_df = extract_mp_role_and_employer(merged_df)
-    print(merged_df.shape)
+
     return merged_df
+
 
 
 # stage 4: extract investments and assets
@@ -1027,7 +1035,7 @@ def clean_and_save_to_database(df):
     for col in date_columns:
         df[col] = df[col].apply(parse_and_format_dates)
 
-    # clean df for saving
+    # Format datatypes and strings
     check_and_adjust_column_types(df, RegisteredInterest)
     df = truncate_strings_to_max_length(df)
 
