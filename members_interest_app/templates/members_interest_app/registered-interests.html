@@ -1,0 +1,50 @@
+{% extends "members_interest_app/base.html" %}
+{% block content%}
+<div class="container">
+    <main class="container">
+        <div>
+            {% for interest in registered_interests %}
+                <div class="mt-4">
+                    <div class="bg-light p-5 rounded">
+                        <h1><a href="{% url 'registered-interest-profile' interest.id %}">{{ interest.member_of_parliament__name }}</a></h1>
+                        <p><strong>{{ interest.date_created }}</strong></p>
+                        <p><strong>{{ interest.category_name }}</strong></p>
+                        <p><strong>Summary:</strong> {{ interest.interest_summary|truncatechars_html:120 }}</p>
+                        <p><strong>Amount:</strong> 
+                            {% if interest.interest_amount %}
+                                {{ interest.interest_currency }} {{ interest.interest_amount }}
+                            {% else %}
+                                {{ interest.interest_amount }}
+                            {% endif %}
+                        </p>
+                        <p> <strong>What's this about?</strong></p>    
+                        <div style="margin-left: 20px;">
+                            <p>{% if interest.has_financial %}{{ interest.has_financial }}{% endif %}</p>
+                            <p>{% if interest.about_family %}{{ interest.about_family }}{% endif %}</p>
+                            <p>{% if interest.about_employment %}{{ interest.about_employment }}{% endif %}</p>
+                            <p>{% if interest.other_category %}{{ interest.other_category }}{% endif %}</p>                    
+                        </div>    
+                </div>
+            {% endfor %}
+        </div>
+        <!-- Pagination controls -->
+        <div class="pagination mt-4">
+            <span class="step-links">
+                {% if registered_interests.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ registered_interests.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ registered_interests.number }} of {{ registered_interests.paginator.num_pages }}
+                </span>
+
+                {% if registered_interests.has_next %}
+                    <a href="?page={{ registered_interests.next_page_number }}">next</a>
+                    <a href="?page={{ registered_interests.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+      </main>
+</div>
+{% endblock content %}
