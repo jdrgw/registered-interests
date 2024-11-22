@@ -23,7 +23,7 @@ def members_of_parliament(request):
         "membership_end",
         "membership_end_reason",
         "membership_end_notes",
-        "house",
+        "house__name",
     )
 
     paginator = Paginator(members, 20)
