@@ -1,7 +1,13 @@
+import math
+
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from members_interest_app.models import House, MemberOfParliament
+from members_interest_app.models import (
+    House,
+    MemberOfParliament,
+    RegisteredInterest,
+)
 
 
 class TestViews(TestCase):
@@ -71,3 +77,39 @@ class TestMemberProfileView(TestCase):
         client = Client()
         response = client.get(reverse("member", args=[0]))
         self.assertEquals(response.status_code, 404)
+
+
+class TestRegisteredInterestView(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.range = 60
+        self.member = MemberOfParliament.objects.create(name="Michael Scott", api_id=1)
+
+        for i in range(1, self.range):
+            RegisteredInterest.objects.create(
+                member_of_parliament=self.member,
+                api_id=f"api_id_{i}",
+                unique_api_generated_id=f"unique_id_{i}",
+                category_id=f"cat_id_{i}",
+                category_name=f"Category {i}",
+                sort_order=str(i),
+                date_created="2024-01-01",
+                interest_summary=f"Summary for interest {i}"  # Optional, but adding for realism
+            )
+        self.response = self.client.get(reverse("registered-interests"))
+
+    def test_registered_interests_view_response(self):
+        self.assertEquals(self.response.status_code, 200)
+        self.assertTemplateUsed(
+            self.response, "members_interest_app/registered-interests.html"
+        )
+
+    def test_num_members_and_pages(self):
+        registered_interests = self.response.context["registered_interests"]
+        registered_interests_count = registered_interests.paginator.count
+        registered_interests_per_page = registered_interests.paginator.per_page
+
+        total_pages = math.ceil(registered_interests_count / registered_interests_per_page)
+
+        self.assertEquals(registered_interests_count, self.range - 1)
+        self.assertEqual(total_pages, registered_interests.paginator.num_pages)

@@ -4,6 +4,7 @@ from django.urls import resolve, reverse
 from members_interest_app.views import (
     index,
     members_of_parliament,
+    registered_interests,
 )
 
 
@@ -17,3 +18,8 @@ class TestUrls(SimpleTestCase):
         url = reverse("members-of-parliament")
 
         self.assertEquals(resolve(url).func, members_of_parliament)
+
+    def test_registered_interests_url_is_resolved(self):
+        url = reverse("registered-interests")
+
+        self.assertEquals(resolve(url).func, registered_interests)

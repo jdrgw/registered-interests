@@ -10,4 +10,9 @@ urlpatterns = [
         name="members-of-parliament",
     ),
     path("member/<int:pk>/", views.member, name="member"),
+    path(
+        "registered-interests/",
+        views.registered_interests,
+        name="registered-interests"
+    )
 ]
