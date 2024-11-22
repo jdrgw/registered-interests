@@ -1,0 +1,45 @@
+{% extends "members_interest_app/base.html" %}
+{% block content %}
+<div class="container">
+    <main class="container">
+        <div class="mt-4">
+            <div class="bg-light p-5 rounded">
+                <h1>Registered Interest</h1>
+                <p><strong>Category:</strong> {{ registered_interest_profile.category_name }}</p>
+                <p><strong>Summary:</strong> {{ registered_interest_profile.interest_summary }}</p>
+                <p><strong>Date Created:</strong> {{ registered_interest_profile.date_created }}</p>
+                <p><strong>Last Amended:</strong> {{ registered_interest_profile.date_last_amended|default:"N/A" }}</p>
+                <p><strong>Deleted Date:</strong> {{ registered_interest_profile.date_deleted|default:"N/A" }}</p>
+                <p><strong>Is Correction:</strong> {{ registered_interest_profile.is_correction|yesno:"Yes,No" }}</p>
+                <p><strong>Is Child Interest:</strong> {{ registered_interest_profile.is_child_interest|yesno:"Yes,No" }}</p>
+                <p><strong>Parent Interest:</strong> {{ registered_interest_profile.parent_interest|default:"N/A" }}</p>
+                
+                <p><strong>Amount:</strong>
+                    {% if registered_interest_profile.interest_amount %}
+                        {{ registered_interest_profile.interest_currency }} {{ registered_interest_profile.interest_amount }}
+                    {% else %}
+                        {{ registered_interest_profile.interest_currency|default:"N/A" }}
+                    {% endif %}
+                </p>
+                
+                <p><strong>Payer:</strong> {{ registered_interest_profile.payer|default:"N/A" }}</p>
+                <p><strong>Payer Type:</strong> {{ registered_interest_profile.payer_type|default:"N/A" }}</p>
+                <p><strong>Payer Address:</strong> {{ registered_interest_profile.payer_address|default:"N/A" }}</p>
+                <p><strong>Payer Companies House ID:</strong> {{ registered_interest_profile.payer_companies_house_id|default:"N/A" }}</p>
+                <p><strong>Purpose:</strong> {{ registered_interest_profile.purpose|default:"N/A" }}</p>
+                <p><strong>Role:</strong> {{ registered_interest_profile.role|default:"N/A" }}</p>
+                <p><strong>Employer Name:</strong> {{ registered_interest_profile.employer_name|default:"N/A" }}</p>
+                <p><strong>Family Member Name:</strong> {{ registered_interest_profile.family_member_name|default:"N/A" }}</p>
+                <p><strong>Family Member Relationship:</strong> {{ registered_interest_profile.family_member_relationship|default:"N/A" }}</p>
+                <p><strong>Family Member Role:</strong> {{ registered_interest_profile.family_member_role|default:"N/A" }}</p>
+                <p><strong>Family Member Paid by MP or Parliament:</strong> 
+                    {{ registered_interest_profile.family_member_paid_by_mp_or_parliament|yesno:"Yes,No" }}
+                </p>
+                <p><strong>Family Member Lobbies:</strong> 
+                    {{ registered_interest_profile.family_member_lobbies|yesno:"Yes,No" }}
+                </p>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock content %}

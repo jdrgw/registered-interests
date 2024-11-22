@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from django.db.models import Case, Value, When
+from django.db.models import Case, Q, Value, When
 from django.db.models.functions import Substr
 from django.shortcuts import get_object_or_404, render
 
@@ -46,15 +46,38 @@ def registered_interests(request):
         RegisteredInterest
         .objects
         .annotate(
+            # Financial Interests
             has_financial=Case(
                 When(interest_amount__isnull=False, then=Value("Financial"))
             ),
+            # Family-Related Interests
             about_family=Case(
-                When(family_member_name__isnull=False, then=Value("Family")),
+                When(
+                    Q(family_member_name__isnull=False) |
+                    Q(family_member_paid_by_mp_or_parliament=True) |
+                    Q(family_member_lobbies=True),
+                    then=Value("Family")
+                ),
             ),
+            # Employment-Related Interests
+            about_employment=Case(
+                When(
+                    Q(role__isnull=False) |
+                    Q(employer_name__isnull=False),
+                    then=Value("Employment")
+                )
+            ),
+            # Other Interests
             other_category=Case(
-                When(interest_amount__isnull=True, family_member_name__isnull=True,
-                    then=Value("Other"))
+                When(
+                    Q(interest_amount__isnull=True) &
+                    Q(family_member_name__isnull=True) &
+                    Q(family_member_paid_by_mp_or_parliament__isnull=True) &
+                    Q(family_member_lobbies__isnull=True) &
+                    Q(role__isnull=True) &
+                    Q(employer_name__isnull=True),
+                    then=Value("Other")
+                )
             )
         )
         .values(
@@ -65,12 +88,17 @@ def registered_interests(request):
             "interest_summary",
             "interest_currency",
             "interest_amount",
-            "has_financial",
+            "has_financial", 
             "about_family",
+            "about_employment",
             "other_category"
         )
+        .order_by(
+            '-date_created',  # Newest records first
+            'member_of_parliament__name',  # Then grouped by MP name
+            'category_name',  # Then grouped by category
+        )
     )
-
     paginator = Paginator(registered_interests, 50)
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)

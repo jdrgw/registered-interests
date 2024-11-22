@@ -6,7 +6,7 @@
             {% for interest in registered_interests %}
                 <div class="mt-4">
                     <div class="bg-light p-5 rounded">
-                        <h1>{{ interest.member_of_parliament__name }}</h1>
+                        <h1><a href="{% url 'registered-interest-profile' interest.id %}">{{ interest.member_of_parliament__name }}</a></h1>
                         <p><strong>{{ interest.date_created }}</strong></p>
                         <p><strong>{{ interest.category_name }}</strong></p>
                         <p><strong>Summary:</strong> {{ interest.interest_summary|truncatechars_html:120 }}</p>
@@ -18,9 +18,10 @@
                             {% endif %}
                         </p>
                         <p> <strong>What's this about?</strong></p>    
-                        <div iv style="margin-left: 20px;">
+                        <div style="margin-left: 20px;">
                             <p>{% if interest.has_financial %}{{ interest.has_financial }}{% endif %}</p>
                             <p>{% if interest.about_family %}{{ interest.about_family }}{% endif %}</p>
+                            <p>{% if interest.about_employment %}{{ interest.about_employment }}{% endif %}</p>
                             <p>{% if interest.other_category %}{{ interest.other_category }}{% endif %}</p>                    
                         </div>    
                 </div>
