@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from members_interest_app.models import (
+    ExchangeRate,
     House,
     MemberOfParliament,
     RegisteredInterest,
@@ -183,3 +184,19 @@ class RegisteredInterestModelTests(TestCase):
         self.assertEqual(
             str(registered_interest), "Category Name 3 - Another summary of interest"
         )
+
+
+class ExchangeRateModelTest(TestCase):
+    def setUp(self):
+        # Create an ExchangeRate instance for testing
+        self.exchange_rate = ExchangeRate.objects.create(
+            date="2023-11-23",
+            currency="USD",
+            rate_to_gbp=0.7500
+        )
+
+    def test_exchange_rate_creation(self):
+        # Test if the ExchangeRate instance is created correctly
+        self.assertEqual(self.exchange_rate.date, "2023-11-23")
+        self.assertEqual(self.exchange_rate.currency, "USD")
+        self.assertEqual(self.exchange_rate.rate_to_gbp, 0.7500)
