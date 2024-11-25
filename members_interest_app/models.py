@@ -94,6 +94,13 @@ class RegisteredInterest(models.Model):
     interest_amount = models.DecimalField(
         null=True, blank=True, decimal_places=2, max_digits=12
     )
+    gbp_interest_amount = models.DecimalField(
+        null=True,
+        blank=True,
+        decimal_places=2,
+        max_digits=12,
+        help_text="Stores the sterling-equivalent value of the interest amount."
+    )
     CURRENCY_CHOICES = (
         ("GBP", "Pound Sterline"),
         ("USD", "US Dollar"),
