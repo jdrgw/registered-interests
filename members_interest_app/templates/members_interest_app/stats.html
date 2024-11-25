@@ -1,0 +1,79 @@
+{% extends "members_interest_app/base.html" %}
+
+{% block content %}
+<header>
+    <h1>Registered Interest Profile</h1>
+</header>
+<main>
+    <br>
+    <h2>Disclaimer: The accuracy of these stats may vary. The source data is highly textual, and extraction was done quickly.</h2>
+    <br>
+    <p>Aggregated stats calculated from registered interests data sourced fromn parliament API for the period approx 2010-Aug24</p>
+    <br>
+    <section>
+        <h2>Top 10 MPs by Number of Registered Interests</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>MP Name</th>
+                    <th>Number of Registered Interests</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mp in top_10_mps_by_num_interest_counts %}
+                <tr>
+                    <td>{{ mp.name }}</td>
+                    <td>{{ mp.num_registered_interests }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <br>
+
+    <section>
+        <h2>Top 10 MPs by Total GBP Value of Registered Interests</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>MP Name</th>
+                    <th>Total GBP Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mp in top_10_mps_by_gbp_interest_sum %}
+                <tr>
+                    <td>{{ mp.name }}</td>
+                    <td>{{ mp.sum_registered_interests }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <br>
+
+    <section>
+        <h2>Category Frequency</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Category Name</th>
+                    <th>Frequency</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in category_frequency %}
+                <tr>
+                    <td>{{ category.category_name }}</td>
+                    <td>{{ category.cat_freq }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <footer>
+        <strong>Disclaimer: The accuracy of these stats may vary. The source data is highly textual, and extraction was done quickly.</strong>
+    </footer>
+    
+</main>
+{% endblock content %}

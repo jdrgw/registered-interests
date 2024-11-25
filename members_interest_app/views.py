@@ -1,6 +1,8 @@
+from collections import Counter
+
+import spacy
 from django.core.paginator import Paginator
-from django.db.models import Case, Q, Value, When
-from django.db.models.functions import Substr
+from django.db.models import Case, Count, Q, Sum, Value, When
 from django.shortcuts import get_object_or_404, render
 
 from .models import MemberOfParliament, RegisteredInterest
@@ -112,3 +114,67 @@ def registered_interest_profile(request, pk):
     registered_interest_profile = get_object_or_404(RegisteredInterest, pk=pk)
     context = {"registered_interest_profile": registered_interest_profile}
     return render(request, "members_interest_app/registered-interest-profile.html", context)
+
+
+def stats(request):
+
+    top_10_mps_by_num_interests = (
+        MemberOfParliament
+        .objects
+        .annotate(num_registered_interests=Count("registeredinterest"))
+        .values("name", "num_registered_interests")
+        .order_by("-num_registered_interests")
+    )[:10]
+
+    top_10_mps_by_gbp_interest_sum = (
+        MemberOfParliament
+        .objects
+        .filter(registeredinterest__gbp_interest_amount__isnull=False)  # Filter out NULLs
+        .annotate(sum_registered_interests=Sum("registeredinterest__gbp_interest_amount"))
+        .values("name", "sum_registered_interests")
+        .order_by("-sum_registered_interests")  # Reverse order for descending sums
+    )[:10]
+
+    category_frequency = (
+        RegisteredInterest.objects
+        .values("category_name")
+        .annotate(cat_freq=Count("category_name"))
+        .order_by("-cat_freq")
+    )
+
+    context = {
+        "top_10_mps_by_num_interest_counts": top_10_mps_by_num_interests,
+        "top_10_mps_by_gbp_interest_sum": top_10_mps_by_gbp_interest_sum,
+        "category_frequency": category_frequency
+        }
+    
+    # # Identify the most frequent keywords and named entities across all summaries.
+    # # TODO: figure out alternative as this is v. computationally heavy and will reudce site performance.
+    # # TODO: remove following notes
+
+    # nlp.max_length = 2500000
+    # nlp = spacy.load("en_core_web_sm")
+
+    # all_summaries = RegisteredInterest.objects.all().values_list("interest_summary", flat=True)
+    # agg_summaries = "".join(all_summaries)
+    # doc = nlp(agg_summaries)
+
+    # entities = [ent.text for ent in doc.ents]
+    # entity_counts = Counter(entities)
+
+    # print("Top Entities:", entity_counts.most_common(10))
+    
+    # Alternatives
+    # Focus on NORP entities, which represent nationalities, religious groups, and political groups
+    # entities = [ent.text for ent in doc.ents if ent.label_ == "NORP"]
+    # entity_counts = Counter(entities)
+
+    # Focus on people
+    # entities = [ent.text for ent in doc.ents if ent.label_ == "PERSON"]
+    # entity_counts = Counter(entities)
+
+    # Focus on people
+    # entities = [ent.text for ent in doc.ents if ent.label_ == "ORG"]
+    # entity_counts = Counter(entities)
+
+    return render(request, "members_interest_app/stats.html", context)
