@@ -122,7 +122,7 @@ def stats(request):
         MemberOfParliament.objects.annotate(
             num_registered_interests=Count("registeredinterest")
         )
-        .values("name", "num_registered_interests")
+        .values("id", "name", "num_registered_interests")
         .order_by("-num_registered_interests")
     )[:10]
 
@@ -133,7 +133,7 @@ def stats(request):
         .annotate(
             sum_registered_interests=Sum("registeredinterest__gbp_interest_amount")
         )
-        .values("name", "sum_registered_interests")
+        .values("id", "name", "sum_registered_interests")
         .order_by("-sum_registered_interests")  # Reverse order for descending sums
     )[:10]
 

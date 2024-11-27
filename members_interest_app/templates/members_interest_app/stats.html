@@ -22,7 +22,7 @@
             <tbody>
                 {% for mp in top_10_mps_by_num_interest_counts %}
                 <tr>
-                    <td>{{ mp.name }}</td>
+                    <td><a href="{% url 'member' mp.id %}">{{ mp.name }}</a></td>
                     <td>{{ mp.num_registered_interests }}</td>
                 </tr>
                 {% endfor %}
@@ -43,7 +43,7 @@
             <tbody>
                 {% for mp in top_10_mps_by_gbp_interest_sum %}
                 <tr>
-                    <td>{{ mp.name }}</td>
+                    <td><a href="{% url 'member' mp.id %}">{{ mp.name }}</a></td>
                     <td>{{ mp.sum_registered_interests }}</td>
                 </tr>
                 {% endfor %}
