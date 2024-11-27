@@ -95,7 +95,7 @@ class TestRegisteredInterestView(TestCase):
                 category_name=f"Category {i}",
                 sort_order=str(i),
                 date_created="2024-01-01",
-                interest_summary=f"Summary for interest {i}"  # Optional, but adding for realism
+                interest_summary=f"Summary for interest {i}",  # Optional, but adding for realism
             )
         self.response = self.client.get(reverse("registered-interests"))
 
@@ -110,7 +110,9 @@ class TestRegisteredInterestView(TestCase):
         registered_interests_count = registered_interests.paginator.count
         registered_interests_per_page = registered_interests.paginator.per_page
 
-        total_pages = math.ceil(registered_interests_count / registered_interests_per_page)
+        total_pages = math.ceil(
+            registered_interests_count / registered_interests_per_page
+        )
 
         self.assertEquals(registered_interests_count, self.range - 1)
         self.assertEqual(total_pages, registered_interests.paginator.num_pages)
@@ -159,10 +161,14 @@ class TestRegisteredInterestProfileView(TestCase):
 
     def test_existing_registered_interest(self):
         client = Client()
-        response = client.get(reverse("registered-interest-profile", args=[self.registered_interest.pk]))
+        response = client.get(
+            reverse("registered-interest-profile", args=[self.registered_interest.pk])
+        )
 
         self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(response, "members_interest_app/registered-interest-profile.html")
+        self.assertTemplateUsed(
+            response, "members_interest_app/registered-interest-profile.html"
+        )
         self.assertContains(response, self.registered_interest.category_name)
         self.assertContains(response, self.registered_interest.interest_summary)
 
@@ -170,6 +176,7 @@ class TestRegisteredInterestProfileView(TestCase):
         client = Client()
         response = client.get(reverse("registered-interest-profile", args=[0]))
         self.assertEquals(response.status_code, 404)
+
 
 class TestStats(TestCase):
     "Intentionally skipping test creation. Checked output on site and it works fine"

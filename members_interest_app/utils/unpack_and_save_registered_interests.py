@@ -688,7 +688,10 @@ def bulk_save_data(df, batch_size=5000):
                 }
 
                 cleaned_instance_data = {
-                    key: None if pd.isna(value) and isinstance(RegisteredInterest._meta.get_field(key), CharField) else value
+                    key: None
+                    if pd.isna(value)
+                    and isinstance(RegisteredInterest._meta.get_field(key), CharField)
+                    else value
                     for key, value in instance_data.items()
                 }
 
@@ -926,7 +929,7 @@ def extract_currencies_and_amounts(df):
         )
         data_w_extractable_amts = data_w_extractable_amts[
             data_w_extractable_amts["has_multiple_fullstops"] == True  # noqa: E712
-        ] 
+        ]
 
     # split and extract filtered amounts and currencies and extract max amount with its currency
     # convert amounts to floats in operation
@@ -972,7 +975,6 @@ def extract_third_party_details(df):
     merged_df = extract_mp_role_and_employer(merged_df)
 
     return merged_df
-
 
 
 # stage 4: extract investments and assets

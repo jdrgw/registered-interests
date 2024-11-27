@@ -63,4 +63,3 @@ class RunConvertInterestAmountToGBP(TestCase):
     "This class is intentionally left blank as the management command is not directly tested."
 
     pass
-

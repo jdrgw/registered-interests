@@ -47,9 +47,7 @@ def member(request, pk):
 
 def registered_interests(request):
     registered_interests = (
-        RegisteredInterest
-        .objects
-        .annotate(
+        RegisteredInterest.objects.annotate(
             # Financial Interests
             has_financial=Case(
                 When(interest_amount__isnull=False, then=Value("Financial"))
@@ -57,32 +55,31 @@ def registered_interests(request):
             # Family-Related Interests
             about_family=Case(
                 When(
-                    Q(family_member_name__isnull=False) |
-                    Q(family_member_paid_by_mp_or_parliament=True) |
-                    Q(family_member_lobbies=True),
-                    then=Value("Family")
+                    Q(family_member_name__isnull=False)
+                    | Q(family_member_paid_by_mp_or_parliament=True)
+                    | Q(family_member_lobbies=True),
+                    then=Value("Family"),
                 ),
             ),
             # Employment-Related Interests
             about_employment=Case(
                 When(
-                    Q(role__isnull=False) |
-                    Q(employer_name__isnull=False),
-                    then=Value("Employment")
+                    Q(role__isnull=False) | Q(employer_name__isnull=False),
+                    then=Value("Employment"),
                 )
             ),
             # Other Interests
             other_category=Case(
                 When(
-                    Q(interest_amount__isnull=True) &
-                    Q(family_member_name__isnull=True) &
-                    Q(family_member_paid_by_mp_or_parliament__isnull=True) &
-                    Q(family_member_lobbies__isnull=True) &
-                    Q(role__isnull=True) &
-                    Q(employer_name__isnull=True),
-                    then=Value("Other")
+                    Q(interest_amount__isnull=True)
+                    & Q(family_member_name__isnull=True)
+                    & Q(family_member_paid_by_mp_or_parliament__isnull=True)
+                    & Q(family_member_lobbies__isnull=True)
+                    & Q(role__isnull=True)
+                    & Q(employer_name__isnull=True),
+                    then=Value("Other"),
                 )
-            )
+            ),
         )
         .values(
             "id",
@@ -92,15 +89,15 @@ def registered_interests(request):
             "interest_summary",
             "interest_currency",
             "interest_amount",
-            "has_financial", 
+            "has_financial",
             "about_family",
             "about_employment",
-            "other_category"
+            "other_category",
         )
         .order_by(
-            '-date_created',  # Newest records first
-            'member_of_parliament__name',  # Then grouped by MP name
-            'category_name',  # Then grouped by category
+            "-date_created",  # Newest records first
+            "member_of_parliament__name",  # Then grouped by MP name
+            "category_name",  # Then grouped by category
         )
     )
     paginator = Paginator(registered_interests, 50)
@@ -115,31 +112,33 @@ def registered_interests(request):
 def registered_interest_profile(request, pk):
     registered_interest_profile = get_object_or_404(RegisteredInterest, pk=pk)
     context = {"registered_interest_profile": registered_interest_profile}
-    return render(request, "members_interest_app/registered-interest-profile.html", context)
+    return render(
+        request, "members_interest_app/registered-interest-profile.html", context
+    )
 
 
 def stats(request):
-
     top_10_mps_by_num_interests = (
-        MemberOfParliament
-        .objects
-        .annotate(num_registered_interests=Count("registeredinterest"))
+        MemberOfParliament.objects.annotate(
+            num_registered_interests=Count("registeredinterest")
+        )
         .values("name", "num_registered_interests")
         .order_by("-num_registered_interests")
     )[:10]
 
     top_10_mps_by_gbp_interest_sum = (
-        MemberOfParliament
-        .objects
-        .filter(registeredinterest__gbp_interest_amount__isnull=False)  # Filter out NULLs
-        .annotate(sum_registered_interests=Sum("registeredinterest__gbp_interest_amount"))
+        MemberOfParliament.objects.filter(
+            registeredinterest__gbp_interest_amount__isnull=False
+        )  # Filter out NULLs
+        .annotate(
+            sum_registered_interests=Sum("registeredinterest__gbp_interest_amount")
+        )
         .values("name", "sum_registered_interests")
         .order_by("-sum_registered_interests")  # Reverse order for descending sums
     )[:10]
 
     category_frequency = (
-        RegisteredInterest.objects
-        .values("category_name")
+        RegisteredInterest.objects.values("category_name")
         .annotate(cat_freq=Count("category_name"))
         .order_by("-cat_freq")
     )
@@ -147,9 +146,9 @@ def stats(request):
     context = {
         "top_10_mps_by_num_interest_counts": top_10_mps_by_num_interests,
         "top_10_mps_by_gbp_interest_sum": top_10_mps_by_gbp_interest_sum,
-        "category_frequency": category_frequency
-        }
-    
+        "category_frequency": category_frequency,
+    }
+
     # # Identify the most frequent keywords and named entities across all summaries.
     # # TODO: figure out alternative as this is v. computationally heavy and will reudce site performance.
     # # TODO: remove following notes
@@ -165,7 +164,7 @@ def stats(request):
     # entity_counts = Counter(entities)
 
     # print("Top Entities:", entity_counts.most_common(10))
-    
+
     # Alternatives
     # Focus on NORP entities, which represent nationalities, religious groups, and political groups
     # entities = [ent.text for ent in doc.ents if ent.label_ == "NORP"]
