@@ -1,0 +1,5 @@
+django-test-migrations==1.4.0
+en-core-web-md==3.5.0
+git-filter-repo==2.45.0
+ruff==0.6.9
+typing-extensions==4.12.2
