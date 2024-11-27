@@ -47,13 +47,13 @@ class TestCallMembersAPI(TestCase):
         mock_fetch_members_data.assert_called_once()
 
 
-class Test_unpack_and_save_registred_interest(TestCase):
+class TestUnpackAndSaveRegistredInterest(TestCase):
     "This class is intentionally left blank as the management command is not directly tested."
 
     pass
 
 
-class run_save_exchange_rates(TestCase):
+class RunDSaveExchangeRates(TestCase):
     "This class is intentionally left blank as the management command is not directly tested."
 
     pass
