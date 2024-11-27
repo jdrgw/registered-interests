@@ -28,4 +28,9 @@ urlpatterns = [
         views.registered_interest_profile, 
         name="registered-interest-profile"
     ),
+    path(
+        "stats/", 
+        views.stats, 
+        name="stats"
+    )
 ]

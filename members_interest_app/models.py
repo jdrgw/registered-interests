@@ -55,6 +55,12 @@ class MemberOfParliament(models.Model):
         super().save(*args, **kwargs)
 
 
+class ExchangeRate(models.Model):
+    date = models.DateField()
+    currency = models.CharField(max_length=3)  # e.g., "USD"
+    rate_to_gbp = models.DecimalField(max_digits=12, decimal_places=6)  # Exchange rate to GBP
+
+
 # TODO: split registered interest into separate models based on category type in API data. Bunging into one model for speed.
 class RegisteredInterest(models.Model):
     id = models.AutoField(primary_key=True)
@@ -87,6 +93,13 @@ class RegisteredInterest(models.Model):
     # fields where data to be extracted from api_data
     interest_amount = models.DecimalField(
         null=True, blank=True, decimal_places=2, max_digits=12
+    )
+    gbp_interest_amount = models.DecimalField(
+        null=True,
+        blank=True,
+        decimal_places=2,
+        max_digits=12,
+        help_text="Stores the sterling-equivalent value of the interest amount."
     )
     CURRENCY_CHOICES = (
         ("GBP", "Pound Sterline"),

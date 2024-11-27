@@ -51,3 +51,16 @@ class Test_unpack_and_save_registred_interest(TestCase):
     "This class is intentionally left blank as the management command is not directly tested."
 
     pass
+
+
+class run_save_exchange_rates(TestCase):
+    "This class is intentionally left blank as the management command is not directly tested."
+
+    pass
+
+
+class RunConvertInterestAmountToGBP(TestCase):
+    "This class is intentionally left blank as the management command is not directly tested."
+
+    pass
+

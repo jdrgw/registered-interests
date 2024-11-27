@@ -170,3 +170,8 @@ class TestRegisteredInterestProfileView(TestCase):
         client = Client()
         response = client.get(reverse("registered-interest-profile", args=[0]))
         self.assertEquals(response.status_code, 404)
+
+class TestStats(TestCase):
+    "Intentionally skipping test creation. Checked output on site and it works fine"
+
+    pass
