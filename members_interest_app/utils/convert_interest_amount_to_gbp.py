@@ -1,4 +1,3 @@
-from django.db.models.functions import TruncDate
 
 from members_interest_app.models import ExchangeRate, RegisteredInterest
 

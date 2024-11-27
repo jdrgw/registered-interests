@@ -1,4 +1,4 @@
-from django.test import SimpleTestCase, TestCase
+from django.test import SimpleTestCase
 from django.urls import resolve, reverse
 
 from members_interest_app.views import (

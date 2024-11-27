@@ -1,6 +1,8 @@
-from collections import Counter
+from collections import (
+    Counter,  # noqa: F401, had intended to use with spacy to implement ml but leaving here
+)
 
-import spacy
+# import spacy
 from django.core.paginator import Paginator
 from django.db.models import Case, Count, Q, Sum, Value, When
 from django.shortcuts import get_object_or_404, render

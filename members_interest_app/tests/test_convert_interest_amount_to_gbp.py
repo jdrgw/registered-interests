@@ -5,9 +5,8 @@ from django.test import TestCase
 from members_interest_app.models import (
     ExchangeRate,
     MemberOfParliament,
-    RegisteredInterest
+    RegisteredInterest,
 )
-
 from members_interest_app.utils.convert_interest_amount_to_gbp import (
     convert_interest_amount_to_gbp,
 )

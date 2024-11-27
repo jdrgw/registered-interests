@@ -16,5 +16,5 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f"Successfully ran: {result}"))
         except Exception as e:
             # Log the full stack trace for unexpected errors
-            self.stderr.write(self.style.ERROR("An unexpected error occurred:"))
+            self.stderr.write(self.style.ERROR(f"An unexpected error occurred:{e}"))
             self.stderr.write(traceback.format_exc())
