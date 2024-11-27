@@ -1,5 +1,3 @@
-from django.db.models.functions import TruncDate
-
 from members_interest_app.models import ExchangeRate, RegisteredInterest
 
 
@@ -19,14 +17,20 @@ def convert_interest_amount_to_gbp():
             interest.gbp_interest_amount = interest.interest_amount
         else:
             # Match exchange rate based on interest date
-            exchange_rate = ExchangeRate.objects.filter(
-                currency=interest.interest_currency,
-                date__lte=interest.date_created.date()  # Truncate datetime to date
-            ).order_by("-date").first()  # Get the latest exchange rate before or on the date
+            exchange_rate = (
+                ExchangeRate.objects.filter(
+                    currency=interest.interest_currency,
+                    date__lte=interest.date_created.date(),  # Truncate datetime to date
+                )
+                .order_by("-date")
+                .first()
+            )  # Get the latest exchange rate before or on the date
 
             if exchange_rate:
                 # Convert to GBP using the exchange rate
-                interest.gbp_interest_amount = interest.interest_amount * exchange_rate.rate_to_gbp
+                interest.gbp_interest_amount = (
+                    interest.interest_amount * exchange_rate.rate_to_gbp
+                )
             else:
                 # No matching exchange rate; set as None (optional)
                 interest.gbp_interest_amount = None

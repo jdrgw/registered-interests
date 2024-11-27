@@ -1,5 +1,8 @@
 from django.test import TestCase
-from members_interest_app.utils.save_exchange_rates import save_exchange_rates
+
+from members_interest_app.utils.save_exchange_rates import (
+    save_exchange_rates,  # noqa: F401
+)
 
 
 class TestSaveExchangeRates(TestCase):

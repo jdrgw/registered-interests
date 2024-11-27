@@ -192,9 +192,7 @@ class ExchangeRateModelTest(TestCase):
     def setUp(self):
         # Create an ExchangeRate instance for testing
         self.exchange_rate = ExchangeRate.objects.create(
-            date="2023-11-23",
-            currency="USD",
-            rate_to_gbp=0.7500
+            date="2023-11-23", currency="USD", rate_to_gbp=0.7500
         )
 
     def test_exchange_rate_creation(self):
