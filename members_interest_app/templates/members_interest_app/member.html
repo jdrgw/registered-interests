@@ -16,5 +16,36 @@
             </div>
         </div>
     </main>
+    <main class="container">
+        <div class="mt-4">
+            <div class="bg-light p-5 rounded">
+                <h2>{{ member.name }}'s Registered Interests</h2>
+                <div>
+                    {% if members_registered_interests %}
+                    <table style="border-spacing: 20px; table-layout: fixed;">
+                        <thead>
+                            <tr>
+                                <th style="padding-right: 20px;">Date</th>
+                                <th style="padding-right: 20px;">Category</th>
+                                <th style="padding-right: 20px;">Interest Summary</th>    
+                                <th style="padding-right: 20px;">See more</th>    
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for interest in members_registered_interests %}
+                            <tr>
+                                <td style="padding-right: 20px; padding-bottom: 10px;">{{ interest.date_created|date:"Y-m-d"  }}</td>
+                                <td style="padding-right: 20px; padding-bottom: 10px;">{{ interest.category_name|truncatechars_html:30 }}</td>
+                                <td style="padding-right: 20px; padding-bottom: 10px;">{{ interest.interest_summary|truncatechars_html:80 }}</td>
+                                <td style="padding-bottom: 10px;"><a href="{% url 'registered-interest-profile' interest.id %}">see more</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </main>
 </div>
 {% endblock content %}

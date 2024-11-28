@@ -39,9 +39,21 @@ def members_of_parliament(request):
     return render(request, "members_interest_app/members-of-parliament.html", context)
 
 
-def member(request, pk):
+def member_profile(request, pk):
     member = get_object_or_404(MemberOfParliament, pk=pk)
-    context = {"member": member}
+    members_registered_interests = (
+        RegisteredInterest
+        .objects
+        .filter(
+            member_of_parliament=member
+        )
+        .values()
+        .order_by("-date_created")  # Newest records first
+    )
+    context = {
+        "member": member,
+        "members_registered_interests": members_registered_interests
+        }
     return render(request, "members_interest_app/member.html", context)
 
 

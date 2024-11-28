@@ -9,7 +9,7 @@ urlpatterns = [
         views.members_of_parliament,
         name="members-of-parliament",
     ),
-    path("member/<int:pk>/", views.member, name="member"),
+    path("member/<int:pk>/", views.member_profile, name="member"),
     path(
         "registered-interests/", views.registered_interests, name="registered-interests"
     ),
