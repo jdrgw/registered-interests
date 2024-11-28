@@ -79,6 +79,13 @@ class TestMemberProfileView(TestCase):
         response = client.get(reverse("member", args=[0]))
         self.assertEquals(response.status_code, 404)
 
+    def test_members_registered_interests(self):
+        """
+        I filtered registered interests by member objects and added to context.
+        But I won't write a test for this because it's a very basic queryset.
+        """
+        pass
+
 
 class TestRegisteredInterestView(TestCase):
     def setUp(self):

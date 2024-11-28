@@ -39,9 +39,21 @@ def members_of_parliament(request):
     return render(request, "members_interest_app/members-of-parliament.html", context)
 
 
-def member(request, pk):
+def member_profile(request, pk):
     member = get_object_or_404(MemberOfParliament, pk=pk)
-    context = {"member": member}
+    members_registered_interests = (
+        RegisteredInterest
+        .objects
+        .filter(
+            member_of_parliament=member
+        )
+        .values()
+        .order_by("-date_created")  # Newest records first
+    )
+    context = {
+        "member": member,
+        "members_registered_interests": members_registered_interests
+        }
     return render(request, "members_interest_app/member.html", context)
 
 
@@ -122,7 +134,7 @@ def stats(request):
         MemberOfParliament.objects.annotate(
             num_registered_interests=Count("registeredinterest")
         )
-        .values("name", "num_registered_interests")
+        .values("id", "name", "num_registered_interests")
         .order_by("-num_registered_interests")
     )[:10]
 
@@ -133,7 +145,7 @@ def stats(request):
         .annotate(
             sum_registered_interests=Sum("registeredinterest__gbp_interest_amount")
         )
-        .values("name", "sum_registered_interests")
+        .values("id", "name", "sum_registered_interests")
         .order_by("-sum_registered_interests")  # Reverse order for descending sums
     )[:10]
 

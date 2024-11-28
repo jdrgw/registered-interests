@@ -3,7 +3,7 @@ from django.urls import resolve, reverse
 
 from members_interest_app.views import (
     index,
-    member,
+    member_profile,
     members_of_parliament,
     registered_interest_profile,
     registered_interests,
@@ -37,7 +37,7 @@ class TestUrls(SimpleTestCase):
         pk = 1  # Example primary key for the test
         url = reverse("member", args=[pk])
 
-        self.assertEquals(resolve(url).func, member)
+        self.assertEquals(resolve(url).func, member_profile)
 
     def test_stats_url_is_resolved(self):
         url = reverse("stats")
