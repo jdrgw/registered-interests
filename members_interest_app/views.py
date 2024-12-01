@@ -7,11 +7,11 @@ from django.core.paginator import Paginator
 from django.db.models import Case, Count, Q, Sum, Value, When
 from django.shortcuts import get_object_or_404, render
 
+from .forms import SearchForm
 from .models import MemberOfParliament, RegisteredInterest
 
+
 # Create your views here.
-
-
 def index(request):
     return render(request, "members_interest_app/index.html")
 
@@ -191,3 +191,38 @@ def stats(request):
     # entity_counts = Counter(entities)
 
     return render(request, "members_interest_app/stats.html", context)
+
+
+def search_results(request):
+    # Initialize search_results as an empty queryset
+    search_results = MemberOfParliament.objects.all()
+    search_term = None
+    context = {}
+
+    if request.method == "GET":
+        form = SearchForm(request.GET)
+
+        if form.is_valid():
+            search_term = form.cleaned_data.get("q")
+            # Filter the search results by the search term if the form is valid
+            search_results = MemberOfParliament.objects.filter(name__icontains=search_term).order_by("name")
+
+    # Pagination
+    paginator = Paginator(search_results, 20)
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+
+    if not page_obj.object_list:
+        context = {
+            "search_results": [],
+            "no_results_message": "No results found. Try refining your search by using a different name or part of the name."
+        }
+    else:
+        context = {
+            "search_results": page_obj,
+            "form": SearchForm(request.GET),  # To retain the form state
+            "search_term": search_term,  # Pass the search term to the template
+        }
+
+    return render(request, "members_interest_app/search-results.html", context)
+

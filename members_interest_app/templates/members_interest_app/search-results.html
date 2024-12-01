@@ -1,0 +1,35 @@
+{% extends "members_interest_app/base.html" %}
+{% block content %}
+<main>
+    <div style="margin-left: 20px; font-size: large; font-weight: 500;">
+        {% if no_results_message %}
+            <p>{{ no_results_message }}</p>
+        {% else %}
+            {% for result in search_results %}
+                <section>
+                    <a href="{% url 'member' result.id %}">{{ result.name }}</a>
+                </section>
+                <br>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <!-- Pagination controls -->
+    <div class="pagination mt-4">
+        <span class="step-links">
+            {% if search_results.has_previous %}
+                <a href="?page=1&q={{ search_term }}">&laquo; first</a>
+                <a href="?page={{ search_results.previous_page_number }}&q={{ search_term }}">previous</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ search_results.number }} of {{ search_results.paginator.num_pages }}
+            </span>
+    
+            {% if search_results.has_next %}
+                <a href="?page={{ search_results.next_page_number }}&q={{ search_term }}">next</a>
+                <a href="?page={{ search_results.paginator.num_pages }}&q={{ search_term }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</main>
+{% endblock %}
