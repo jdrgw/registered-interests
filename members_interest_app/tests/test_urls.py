@@ -7,6 +7,7 @@ from members_interest_app.views import (
     members_of_parliament,
     registered_interest_profile,
     registered_interests,
+    search_results,
     stats,
 )
 
@@ -43,3 +44,8 @@ class TestUrls(SimpleTestCase):
         url = reverse("stats")
 
         self.assertEquals(resolve(url).func, stats)
+
+    def test_search_results_url_is_resolved(self):
+        url = reverse("search-results")
+
+        self.assertEquals(resolve(url).func, search_results)
