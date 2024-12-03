@@ -19,4 +19,5 @@ urlpatterns = [
         name="registered-interest-profile",
     ),
     path("stats/", views.stats, name="stats"),
+    path("search/", views.search_results, name="search-results"),
 ]

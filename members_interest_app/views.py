@@ -5,13 +5,14 @@ from collections import (
 # import spacy
 from django.core.paginator import Paginator
 from django.db.models import Case, Count, Q, Sum, Value, When
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 
+from .forms import SearchForm
 from .models import MemberOfParliament, RegisteredInterest
 
+
 # Create your views here.
-
-
 def index(request):
     return render(request, "members_interest_app/index.html")
 
@@ -42,18 +43,14 @@ def members_of_parliament(request):
 def member_profile(request, pk):
     member = get_object_or_404(MemberOfParliament, pk=pk)
     members_registered_interests = (
-        RegisteredInterest
-        .objects
-        .filter(
-            member_of_parliament=member
-        )
+        RegisteredInterest.objects.filter(member_of_parliament=member)
         .values()
         .order_by("-date_created")  # Newest records first
     )
     context = {
         "member": member,
-        "members_registered_interests": members_registered_interests
-        }
+        "members_registered_interests": members_registered_interests,
+    }
     return render(request, "members_interest_app/member.html", context)
 
 
@@ -191,3 +188,50 @@ def stats(request):
     # entity_counts = Counter(entities)
 
     return render(request, "members_interest_app/stats.html", context)
+
+
+def search_results(request):
+    # Initialise search_results as an empty queryset
+    search_results = MemberOfParliament.objects.all()
+    query = None
+    context = {}
+
+    if request.method == "GET":
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data.get("q")
+            if query:
+                search_results = search_results.filter(name__icontains=query).order_by(
+                    "name"
+                )
+
+        is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
+        if is_ajax:
+            # Handling AJAX requests
+            if query:
+                three_results = search_results[:3].values_list("name", flat=True)
+                results = list(three_results)
+            else:
+                results = []
+
+            return JsonResponse({"status": "success", "results": results})
+
+    # Pagination for regular GET requests
+    paginator = Paginator(search_results, 20)
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+
+    if not page_obj.object_list:
+        context = {
+            "search_results": [],
+            "no_results_message": "No results found. Try refining your search by using a different name or part of the name.",
+        }
+    else:
+        context = {
+            "search_results": page_obj,
+            "form": form,
+            "search_term": query,
+        }
+
+    return render(request, "members_interest_app/search-results.html", context)

@@ -189,3 +189,9 @@ class TestStats(TestCase):
     "Intentionally skipping test creation. Checked output on site and it works fine"
 
     pass
+
+
+class TestSearchResults(TestCase):
+    "Intentionally skipping test creation. Checked output on site and it works fine"
+
+    pass
