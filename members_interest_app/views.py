@@ -43,18 +43,14 @@ def members_of_parliament(request):
 def member_profile(request, pk):
     member = get_object_or_404(MemberOfParliament, pk=pk)
     members_registered_interests = (
-        RegisteredInterest
-        .objects
-        .filter(
-            member_of_parliament=member
-        )
+        RegisteredInterest.objects.filter(member_of_parliament=member)
         .values()
         .order_by("-date_created")  # Newest records first
     )
     context = {
         "member": member,
-        "members_registered_interests": members_registered_interests
-        }
+        "members_registered_interests": members_registered_interests,
+    }
     return render(request, "members_interest_app/member.html", context)
 
 
@@ -205,9 +201,11 @@ def search_results(request):
         if form.is_valid():
             query = form.cleaned_data.get("q")
             if query:
-                search_results = search_results.filter(name__icontains=query).order_by("name")
+                search_results = search_results.filter(name__icontains=query).order_by(
+                    "name"
+                )
 
-        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
         if is_ajax:
             # Handling AJAX requests
@@ -216,8 +214,8 @@ def search_results(request):
                 results = list(three_results)
             else:
                 results = []
-            
-            return JsonResponse({'status': 'success', 'results': results})
+
+            return JsonResponse({"status": "success", "results": results})
 
     # Pagination for regular GET requests
     paginator = Paginator(search_results, 20)
@@ -227,7 +225,7 @@ def search_results(request):
     if not page_obj.object_list:
         context = {
             "search_results": [],
-            "no_results_message": "No results found. Try refining your search by using a different name or part of the name."
+            "no_results_message": "No results found. Try refining your search by using a different name or part of the name.",
         }
     else:
         context = {

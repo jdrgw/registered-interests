@@ -195,4 +195,3 @@ class TestSearchResults(TestCase):
     "Intentionally skipping test creation. Checked output on site and it works fine"
 
     pass
-
