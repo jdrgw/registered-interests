@@ -3,7 +3,12 @@
 {% block content %}
 <main>
     <br>
-    <h2>Disclaimer: The accuracy of these stats may vary. The source data is highly textual, and extraction was done quickly.</h2>
+    <h3>
+        Disclaimer: Data aggregation is limited for two reasons. Extraction is incomplete as source data is highly textual and speed 
+        was prioritised. And many registered interests are not available through the API. For example, Boris Johnson's interests are listed 
+        on <a href="https://publications.parliament.uk/pa/cm/cmregmem/210614/johnson_boris.htm">parliament's publications site</a> 
+        but not the <a href="https://members-api.parliament.uk/api/Members/1423/RegisteredInterests">API</a>.
+    </h3>
     <br>
     <p>Aggregated stats calculated from registered interests data sourced fromn parliament API for the period approx 2010-Aug24</p>
     <br>
@@ -68,9 +73,5 @@
             </tbody>
         </table>
     </section>
-    <footer>
-        <strong>Disclaimer: The accuracy of these stats may vary. The source data is highly textual, and extraction was done quickly.</strong>
-    </footer>
-    
 </main>
 {% endblock content %}

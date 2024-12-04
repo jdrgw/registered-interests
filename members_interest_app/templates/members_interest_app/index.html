@@ -19,7 +19,12 @@
         <div class="mt-4">
             <div class="bg-light p-5 rounded">
                 <h1>Stats</h1>
-                <p class="lead">Get stats on MPs and Registered Interests. Buyer beware: source data highly textual and extraction done quickly.</p>
+                <p class="lead">
+                    Get stats on MPs and Registered Interests. Buyer beware: aggregations limited by the fact that source data highly textual and extraction done quickly.
+                    Moreover, the source data is incomplete. Many registered interests are not available through the API. For example, Boris Johnson's interests are listed 
+                    on <a href="https://publications.parliament.uk/pa/cm/cmregmem/210614/johnson_boris.htm">parliament's publications site</a> but not 
+                    the <a href="https://members-api.parliament.uk/api/Members/1423/RegisteredInterests">API</a>
+                </p>
                 <a class="btn btn-lg btn-primary" href="{% url 'stats' %}" role="button">View Stats &raquo;</a>
             </div>    
         </div>
