@@ -18,17 +18,21 @@ def index(request):
 
 
 def members_of_parliament(request):
-    members = MemberOfParliament.objects.all().values(
-        "id",
-        "name",
-        "gender",
-        "thumbnail_url",
-        "constituency",
-        "membership_start",
-        "membership_end",
-        "membership_end_reason",
-        "membership_end_notes",
-        "house__name",
+    members = (
+        MemberOfParliament.objects.all()
+        .values(
+            "id",
+            "name",
+            "gender",
+            "thumbnail_url",
+            "constituency",
+            "membership_start",
+            "membership_end",
+            "membership_end_reason",
+            "membership_end_notes",
+            "house__name",
+        )
+        .order_by("name")
     )
 
     paginator = Paginator(members, 20)
